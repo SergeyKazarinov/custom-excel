@@ -1,0 +1,21 @@
+{
+  "name": "custom-excel",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/SergeyKazarinov/custom-excel.git"
+  },
+  "keywords": [
+    "js",
+    "ts",
+    "typeScript",
+    "excel"
+  ],
+  "author": "Sergey Kazarinov <kazarinov092@gmail.com>",
+  "license": "ISC"
+}

@@ -1,0 +1,35 @@
+# See https://help.github.com/articles/ignoring-files/ for more about ignoring files.
+.idea
+# dependencies
+/node_modules
+/.pnp
+.pnp.js
+
+# VSCode
+.vscode
+
+# testing
+/coverage
+/reports/unit.html
+storybook-static
+.loki/report.html
+.loki/report.json
+
+# production
+/build
+
+/dist
+
+# misc
+.DS_Store
+.env.local
+.env.development.local
+.env.test.local
+.env.production.local
+.env
+
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+test-report.html
