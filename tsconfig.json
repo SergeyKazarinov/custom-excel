@@ -1,0 +1,30 @@
+{
+  "compilerOptions": {
+    "outDir": "./dist/", // куда будет происходить сборка
+    "noImplicitAny": true, // Не позволяет использовать переменные без явного указания типа
+    "module": "ESNext", // указываем модульную систему
+    "target": "es5", // В какую спецификацию компилируем. Указываем версию стандарта, в которую будет компилироваться код
+    "jsx": "react-jsx", // позволяет писать синтаксис, как в react
+    "strict": true,
+    "allowJs": true, //позволяет обрабатывать не только ts файлы, но и js
+    "moduleResolution": "node", // определяет то, какие импорты будут
+    // позволяет работать с пакетами, которые используют common js как с обычными пакетами с помощью import
+    "esModuleInterop": true,
+    // Если какие-то библиотеки не имееют default import,
+    // в таком случае импорт выглядит так import * as path from 'path';
+    // с этим правилам можно писать import path from 'path';
+    "allowSyntheticDefaultImports": true,
+    "baseUrl": ".",
+    "paths": {
+      "@*": ["./src/"],
+      "@core/*": ["./src/core/*"]
+    },
+    "isolatedModules": true
+  },
+  "ts-node": {
+    // для того, чтобы webpack собирался при настройках с новыми импортами, без использования required
+    "compilerOptions": {
+      "module": "CommonJS"
+    }
+  }
+}
