@@ -3,21 +3,25 @@ import HtmlWebpackPlugin from 'html-webpack-plugin';
 import webpack from 'webpack';
 import CopyPlugin from 'copy-webpack-plugin';
 import MiniCssExtractPlugin from 'mini-css-extract-plugin';
-import { DotenvParseOutput, configDotenv } from 'dotenv';
-import type { Configuration as DevServerConfiguration } from 'webpack-dev-server';
+// eslint-disable-next-line
+import type { Configuration as DevServerConfiguration } from 'webpack-dev-server'; // необходим для корректной работы типов
 import type { Configuration } from 'webpack';
 
-const env: DotenvParseOutput | undefined = configDotenv().parsed;
-const isProd: boolean = env?.NODE_ENV === 'production';
-const fileName = (ext: 'css' | 'js') => (isProd ? `[name].[contenthash].${ext}` : `[name].${ext}`);
+const fileName = (ext: 'css' | 'js', isProduction: boolean): string =>
+  isProduction ? `[name].[contenthash].${ext}` : `[name].${ext}`;
+interface IEnvWebpack {
+  mode: 'development' | 'production';
+}
 
-export default (env: any) => {
+// eslint-disable-next-line
+export default (env: IEnvWebpack) => {
+  const isProduction = env?.mode === 'production';
   const config: Configuration = {
     context: path.resolve(__dirname, 'src'),
     entry: './index.ts',
     mode: 'development',
     output: {
-      filename: fileName('js'),
+      filename: fileName('js', isProduction),
       path: path.resolve(__dirname, 'dist'),
       clean: true,
     },
@@ -27,17 +31,20 @@ export default (env: any) => {
       new HtmlWebpackPlugin({
         template: path.resolve(__dirname, 'public', 'index.html'),
         minify: {
-          removeComments: isProd,
-          collapseWhitespace: isProd,
+          removeComments: isProduction,
+          collapseWhitespace: isProduction,
         },
       }),
       new CopyPlugin({
         patterns: [
-          { from: path.resolve(__dirname, 'public', 'assets'), to: path.resolve(__dirname, 'dist', 'assets') },
+          {
+            from: path.resolve(__dirname, 'public', 'assets'),
+            to: path.resolve(__dirname, 'dist', 'assets'),
+          },
         ],
       }),
       new MiniCssExtractPlugin({
-        filename: fileName('css'),
+        filename: fileName('css', isProduction),
       }),
     ],
 
@@ -47,10 +54,10 @@ export default (env: any) => {
       },
       compress: true,
       port: 3000,
-      hot: !isProd,
+      hot: !isProduction,
     },
 
-    devtool: isProd ? false : 'source-map',
+    devtool: isProduction ? false : 'source-map',
 
     module: {
       rules: [

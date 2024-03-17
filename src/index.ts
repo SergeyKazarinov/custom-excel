@@ -1,5 +1,7 @@
+import './index.scss';
+
 const someFunc = async (arg: number) => {
-  console.log('asdf');
+  console.log(arg);
   return Promise.resolve('work2');
 };
 
