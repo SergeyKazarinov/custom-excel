@@ -1,4 +1,4 @@
-import './index.scss';
+import './scss/index.scss';
 
 const someFunc = async (arg: number) => {
   console.log(arg);
