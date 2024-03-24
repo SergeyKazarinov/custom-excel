@@ -28,6 +28,6 @@ npm run start
 
 ## <a id="scripts" ></a>Скрипты
 
-- `npm run start` - Запуск проекта на webpack dev server
-- `npm run dev` - Сборка проекта в dev-режиме
-- `npm run build` - Сборка проекта в prod-режиме
+- `npm run dev` - Запуск проекта на webpack dev server
+- `npm run build:dev` - Сборка проекта в dev-режиме
+- `npm run build:prod` - Сборка проекта в prod-режиме
