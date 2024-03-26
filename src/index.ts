@@ -1,8 +1,12 @@
+import Excel from './components/excel/Excel';
+import Formula from './components/formula/Formula';
+import Header from './components/header/Header';
+import Table from './components/table/Table';
+import Toolbar from './components/toolbar/Toolbar';
 import './scss/index.scss';
 
-const someFunc = async (arg: number) => {
-  console.log(arg);
-  return Promise.resolve('work2');
-};
+const excel = new Excel<Header | Toolbar | Formula | Table>('#app', {
+  components: [Header, Toolbar, Formula, Table],
+});
 
-someFunc(2).then(console.log);
+excel.render();

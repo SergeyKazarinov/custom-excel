@@ -21,5 +21,7 @@ module.exports = {
   ignorePatterns: ['.eslintrc.js', '/docs/*'],
   rules: {
     'no-confusing-arrow': 'off',
+    '@typescript-eslint/no-explicit-any': 'warn',
+    'class-methods-use-this': 'off',
   },
 };
