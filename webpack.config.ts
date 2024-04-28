@@ -87,7 +87,7 @@ export default (env: IEnvWebpack) => {
     resolve: {
       extensions: ['.js', '.ts'],
       alias: {
-        '@': path.resolve(__dirname, 'src'),
+        '@src': path.resolve(__dirname, 'src'),
         '@core': path.resolve(__dirname, 'src', 'core'),
       },
     },

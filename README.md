@@ -5,6 +5,7 @@
 - [Этапы разработки](/docs/developments.md)
 - [Быстрый старт](#start)
 - [Скрипты](#scripts)
+- [Стэк](#stack)
 
 ## <a id="start" ></a>Быстрый старт
 
@@ -31,3 +32,9 @@ npm run start
 - `npm run dev` - Запуск проекта на webpack dev server
 - `npm run build:dev` - Сборка проекта в dev-режиме
 - `npm run build:prod` - Сборка проекта в prod-режиме
+
+## <a id="stack" ></a>Stack
+
+- Node v.20
+- Vanilla JS
+- TS

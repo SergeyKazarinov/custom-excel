@@ -16,7 +16,7 @@
     "allowSyntheticDefaultImports": true,
     "baseUrl": ".",
     "paths": {
-      "@*": ["./src/"],
+      "@src/*": ["./src/*"],
       "@core/*": ["./src/core/*"]
     },
     "isolatedModules": true
