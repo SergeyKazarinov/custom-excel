@@ -4,7 +4,8 @@
 
 .table {
   padding-bottom: 2px;
-  overflow-x: auto;
+  overflow: auto;
+  height: calc(100vh - $formula-height - $header-height - $toolbar-height);
 
   &__row {
     display: flex;
