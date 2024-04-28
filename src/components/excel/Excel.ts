@@ -27,6 +27,10 @@ class Excel<T extends IExcelComponent> {
       $element.html(component.toHTML());
       $root.append($element);
 
+      // debug
+      if (component.name) {
+        window[`c${component.name}`] = component;
+      }
       return component;
     });
     return $root;

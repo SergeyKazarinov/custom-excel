@@ -1,5 +1,5 @@
-export type TListeners = 'input';
+export type TListeners = 'input' | 'click';
 
-export type TUpperListeners = 'Input';
+export type TUpperListeners = 'Input' | 'Click';
 
-export type TMethods = 'onInput';
+export type TMethods = 'onInput' | 'onClick';

@@ -10,6 +10,9 @@ import { IOptions } from '../ExcelComponent/ExcelComponent';
  */
 const getNameWithPrefix = (eventName: TListeners): TMethods => `on${capitalize(eventName)}`;
 export interface IDomListener {
+  $root: Dom;
+  listeners: TListeners[];
+  name: string;
   initDomListeners(): void;
   removeDomListeners(): void;
 }
@@ -33,17 +36,31 @@ class DomListener implements IDomListener {
   initDomListeners() {
     this.listeners.forEach((listener) => {
       const method = getNameWithPrefix(listener);
+
       // @ts-ignore
       if (!this[method]) {
         const name = this.name || '';
         throw new Error(`Method ${method} os not implemented in ${name} Component`);
       }
       // @ts-ignore
-      this.$root.on(listener, this[method]?.bind(this));
+      this[method] = this[method]?.bind(this);
+      // @ts-ignore
+      this.$root.on(listener, this[method]);
     });
   }
 
-  removeDomListeners() {}
+  removeDomListeners() {
+    this.listeners.forEach((listener) => {
+      const method = getNameWithPrefix(listener);
+      // @ts-ignore
+      if (!this[method]) {
+        const name = this.name || '';
+        throw new Error(`Method ${method} os not implemented in ${name} Component`);
+      }
+      // @ts-ignore
+      this.$root.off(listener, this[method]);
+    });
+  }
 }
 
 export default DomListener;

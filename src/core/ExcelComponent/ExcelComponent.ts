@@ -6,6 +6,8 @@ import { TListeners } from '@src/types/listeners';
 export interface IExcelComponent {
   toHTML(): string;
   init(): void;
+  destroy(): void;
+  name?: string;
 }
 
 export interface IOptions {
@@ -23,6 +25,10 @@ class ExcelComponent extends DomListener implements IExcelComponent {
 
   init() {
     this.initDomListeners();
+  }
+
+  destroy() {
+    this.removeDomListeners();
   }
 }
 

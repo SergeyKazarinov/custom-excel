@@ -3,6 +3,7 @@ export interface IDom {
   clear(): this;
   append(node: Element | Dom): this;
   on(evenType: string, callback: (...arg: any[]) => void): void;
+  off(evenType: string, callback: (...arg: any[]) => void): void;
 }
 
 export class Dom implements IDom {
@@ -29,6 +30,10 @@ export class Dom implements IDom {
 
   on(eventType: string, callback: (...arg: any[]) => void) {
     this.$el?.addEventListener(eventType, callback);
+  }
+
+  off(eventType: string, callback: (...arg: any[]) => void) {
+    this.$el?.removeEventListener(eventType, callback);
   }
 
   append(node: Dom | Element) {
