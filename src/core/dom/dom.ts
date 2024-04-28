@@ -1,10 +1,11 @@
-interface IDom {
+export interface IDom {
   html(html: string | undefined): this | string | undefined;
   clear(): this;
   append(node: Element | Dom): this;
+  on(evenType: string, callback: (...arg: any[]) => void): void;
 }
 
-class Dom implements IDom {
+export class Dom implements IDom {
   public $el: Element | null;
 
   constructor(selector: string | Element) {
@@ -24,6 +25,10 @@ class Dom implements IDom {
   clear() {
     this.html('');
     return this;
+  }
+
+  on(eventType: string, callback: (...arg: any[]) => void) {
+    this.$el?.addEventListener(eventType, callback);
   }
 
   append(node: Dom | Element) {

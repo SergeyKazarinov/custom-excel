@@ -10,25 +10,34 @@ class Excel<T extends IExcelComponent> {
 
   public components: (new (...arg: any[]) => T)[];
 
+  public objectComponents: T[];
+
   constructor(selector: string, options: IExcelOptions<T>) {
     this.$el = $(selector);
     this.components = options.components || [];
+    this.objectComponents = [];
   }
 
   getRoot() {
     const $root = $.create('div', 'excel');
 
-    this.components.forEach((Component) => {
+    this.objectComponents = this.components.map((Component) => {
       const $element = $.create('div');
       const component = new Component($element);
       $element.html(component.toHTML());
       $root.append($element);
+
+      return component;
     });
     return $root;
   }
 
   render() {
     this.$el?.append(this.getRoot());
+
+    this.objectComponents.forEach((component) => {
+      component.init();
+    });
   }
 }
 
