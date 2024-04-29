@@ -26,33 +26,44 @@ class Table extends ExcelComponent implements ITable {
   onMousedown(event: MouseEvent) {
     if (event.target instanceof HTMLElement) {
       const resizeAttr = event.target.dataset.resize;
-      if (resizeAttr) {
-        const $resizer = $(event.target);
-        const $parent = $resizer.closest('[data-type="resizable"]');
-        const coords = $parent?.getCoords();
 
-        const cells = this.$root.findAll(`[data-col="${$parent?.data?.col}"]`);
+      const $resizer = $(event.target);
+      const $parent = $resizer.closest('[data-type="resizable"]');
+      const coords = $parent?.getCoords();
 
-        document.onmousemove = (e) => {
-          if (coords) {
+      const cells = this.$root.findAll(`[data-col="${$parent?.data?.col}"]`);
+
+      document.onmousemove = (e) => {
+        if (coords) {
+          if (resizeAttr === 'col') {
             const delta = e.pageX - coords.right;
             const value = coords.width + delta;
-            if ($parent?.$el instanceof HTMLElement) {
-              $parent.$el.style.width = `${value}px`;
-            }
+
+            $parent?.css({ width: `${value}px` });
 
             cells?.forEach((element) => {
               if (element instanceof HTMLElement) {
                 element.style.width = `${value}px`;
               }
             });
-          }
-        };
+          } else {
+            const delta = e.pageY - coords.bottom;
+            const value = coords.height + delta;
 
-        document.onmouseup = () => {
-          document.onmousemove = null;
-        };
-      }
+            $parent?.css({ height: `${value}px` });
+
+            cells?.forEach((element) => {
+              if (element instanceof HTMLElement) {
+                element.style.height = `${value}px`;
+              }
+            });
+          }
+        }
+      };
+
+      document.onmouseup = () => {
+        document.onmousemove = null;
+      };
     }
   }
 

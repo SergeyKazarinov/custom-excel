@@ -4,6 +4,11 @@ export interface IDom {
   append(node: Element | Dom): this;
   on(evenType: string, callback: (...arg: any[]) => void): void;
   off(evenType: string, callback: (...arg: any[]) => void): void;
+  append(node: Dom | Element): this;
+  closest(selector: string): Dom | null | undefined;
+  getCoords(): DOMRect | undefined;
+  findAll(selector: string): NodeListOf<Element> | undefined;
+  css(styles: Partial<Record<keyof CSSStyleDeclaration, string>>): void;
 }
 
 export class Dom implements IDom {
@@ -113,6 +118,14 @@ export class Dom implements IDom {
    */
   findAll(selector: string) {
     return this.$el?.querySelectorAll(selector);
+  }
+
+  css(styles: Partial<Record<keyof CSSStyleDeclaration, string>>) {
+    Object.entries(styles).forEach(([key, value]) => {
+      if (this.$el instanceof HTMLElement && value) {
+        this.$el.style[key as any] = value;
+      }
+    });
   }
 }
 
