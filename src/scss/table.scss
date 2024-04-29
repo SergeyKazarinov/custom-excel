@@ -13,6 +13,7 @@
     height: $row-height;
 
     &_info {
+      position: relative;
       display: flex;
       justify-content: center;
       align-items: center;
@@ -30,6 +31,7 @@
   }
 
   &__column {
+    position: relative;
     display: flex;
     justify-content: center;
     align-items: center;
@@ -57,8 +59,38 @@
 
     &_selected {
       border: none;
-      outline: 2px solid #3c74ff;
+      outline: 2px solid $primary-color;
       z-index: 2;
+    }
+  }
+
+  &__col-resize, &__row-resize {
+    position: absolute;
+    bottom: 0;
+    right: 0;
+    background: $primary-color;
+    opacity: 0;
+
+    &:hover {
+      opacity: 1;
+    }
+  }
+
+  &__col-resize {
+    top: 0;
+    width: 3px;
+
+    &:hover {
+      cursor: col-resize;
+    }
+  }
+
+  &__row-resize {
+    left: 0;
+    height: 3px;
+
+    &:hover {
+      cursor: row-resize;
     }
   }
 }

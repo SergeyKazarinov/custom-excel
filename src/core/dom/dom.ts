@@ -13,6 +13,11 @@ export class Dom implements IDom {
     this.$el = typeof selector === 'string' ? document.querySelector(selector) : selector;
   }
 
+  /**
+   * Метод добавления HTML разметки в dom дерево
+   * @param {string} html - HTML разметка
+   * @returns DOM
+   */
   html(html: string | undefined) {
     if (typeof html === 'string') {
       if (this.$el) {
@@ -23,15 +28,29 @@ export class Dom implements IDom {
     return this.$el?.outerHTML.trim();
   }
 
+  /**
+   * Метод очистки HTML
+   * @returns DOM
+   */
   clear() {
     this.html('');
     return this;
   }
 
+  /**
+   * Метод добавления слушателя событий
+   * @param {string} eventType - тип слушателя
+   * @param callback - колбэк-функция, которая будет срабатывать
+   */
   on(eventType: string, callback: (...arg: any[]) => void) {
     this.$el?.addEventListener(eventType, callback);
   }
 
+  /**
+   * Метод удаления слушателя событий
+   * @param {string} eventType - тип слушателя
+   * @param callback - колбэк-функция, которая будет удаляться
+   */
   off(eventType: string, callback: (...arg: any[]) => void) {
     this.$el?.removeEventListener(eventType, callback);
   }
@@ -50,6 +69,50 @@ export class Dom implements IDom {
     }
 
     return this;
+  }
+
+  /**
+   * Метод получения dom элемента по селектору
+   * @param {string} selector - селектор дом элемента, по которому осуществляется поиск
+   * @returns {Element | null | undefined} возвращает dom элемент
+   */
+  closest(selector: string) {
+    const nodeElement = this.$el?.closest(selector);
+
+    if (nodeElement) {
+      // eslint-disable-next-line
+      return $(nodeElement);
+    }
+
+    return null;
+  }
+
+  /**
+   * Метод получения информации элемента: размеры и положение
+   * @returns - объект с данными
+   */
+  getCoords() {
+    return this.$el?.getBoundingClientRect();
+  }
+
+  /**
+   * getter получения data-атрибутов элемента
+   */
+  get data() {
+    if (this.$el instanceof HTMLElement) {
+      return this.$el.dataset;
+    }
+
+    return null;
+  }
+
+  /**
+   * Метод получения dom всех дом элементов по селектору
+   * @param {string} selector
+   * @returns {NodeListOf<Element>} псевдомассив dom элементов
+   */
+  findAll(selector: string) {
+    return this.$el?.querySelectorAll(selector);
   }
 }
 
