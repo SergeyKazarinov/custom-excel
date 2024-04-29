@@ -120,10 +120,10 @@ export class Dom implements IDom {
     return this.$el?.querySelectorAll(selector);
   }
 
-  css(styles: Partial<Record<keyof CSSStyleDeclaration, string>>) {
+  css(styles: Partial<Record<keyof CSSStyleDeclaration, string | number>>) {
     Object.entries(styles).forEach(([key, value]) => {
-      if (this.$el instanceof HTMLElement && value) {
-        this.$el.style[key as any] = value;
+      if (this.$el instanceof HTMLElement) {
+        this.$el.style[key as any] = String(value);
       }
     });
   }

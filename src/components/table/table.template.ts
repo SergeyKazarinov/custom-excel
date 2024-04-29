@@ -31,7 +31,7 @@ const createRow = ({ children = '', rowName = '' }: { children?: string; rowName
   const resize = rowName && /* html */ `<div class="table__row-resize" data-resize="row"></div>`;
 
   return /* html */ `
-    <div class="table__row" data-type="resizable">
+    <div class="table__row" ${rowName && `data-type="resizable"`}>
       <div class="table__row_info">${rowName}
         ${resize}
       </div>
