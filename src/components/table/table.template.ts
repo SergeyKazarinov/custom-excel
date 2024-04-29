@@ -5,8 +5,8 @@ import toChar from '@src/helpers/toChar';
  * Функция создания ячейки таблицы
  * @returns {HTMLElement} - ячейку таблицы
  */
-const createCell = () => `
-    <div class="table__cell" contenteditable></div>
+const createCell = (_: unknown, colNumber: number) => /* html */ `
+    <div class="table__cell" data-col=${colNumber} contenteditable></div>
   `;
 
 /**
@@ -14,8 +14,11 @@ const createCell = () => `
  * @param {string} colName - содержимое ячейки
  * @returns {HTMLElement} ячейку заголовка таблицы
  */
-const createCol = (colName: string) => `
-    <div class="table__column">${colName}</div>
+const createCol = (colName: string, index: number) => /* html */ `
+    <div class="table__column" data-type="resizable" data-col=${index}>
+      ${colName}
+      <div class="table__col-resize" data-resize="col"></div>
+    </div>
   `;
 
 /**
@@ -24,15 +27,20 @@ const createCol = (colName: string) => `
  * @property {string} rowName - название строки
  * @returns {HTMLElement} строку таблицы
  */
-const createRow = ({ children = '', rowName = '' }: { children?: string; rowName?: string }) => `
-    <div class="table__row">
-      <div class="table__row_info">${rowName}</div>
+const createRow = ({ children = '', rowName = '' }: { children?: string; rowName?: string }) => {
+  const resize = rowName && /* html */ `<div class="table__row-resize" data-resize="row"></div>`;
 
+  return /* html */ `
+    <div class="table__row" ${rowName && `data-type="resizable"`}>
+      <div class="table__row_info">${rowName}
+        ${resize}
+      </div>
       <div class="table__row_data">
         ${children}
       </div>
     </div>
   `;
+};
 
 const createTable = (rowsCount: number = 100) => {
   const colsCount = CHART_CODES.Z - CHART_CODES.A + 1;

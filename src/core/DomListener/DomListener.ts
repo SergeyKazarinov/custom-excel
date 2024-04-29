@@ -1,5 +1,5 @@
 import { Dom } from '@core/dom/dom';
-import capitalize from '@core/helpers/capitalize';
+import capitalize from '@src/helpers/capitalize';
 import { TListeners, TMethods } from '@src/types/listeners';
 import { IOptions } from '../ExcelComponent/ExcelComponent';
 

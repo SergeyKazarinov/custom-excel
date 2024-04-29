@@ -4,6 +4,11 @@ export interface IDom {
   append(node: Element | Dom): this;
   on(evenType: string, callback: (...arg: any[]) => void): void;
   off(evenType: string, callback: (...arg: any[]) => void): void;
+  append(node: Dom | Element): this;
+  closest(selector: string): Dom | null | undefined;
+  getCoords(): DOMRect | undefined;
+  findAll(selector: string): NodeListOf<Element> | undefined;
+  css(styles: Partial<Record<keyof CSSStyleDeclaration, string>>): void;
 }
 
 export class Dom implements IDom {
@@ -13,6 +18,11 @@ export class Dom implements IDom {
     this.$el = typeof selector === 'string' ? document.querySelector(selector) : selector;
   }
 
+  /**
+   * Метод добавления HTML разметки в dom дерево
+   * @param {string} html - HTML разметка
+   * @returns DOM
+   */
   html(html: string | undefined) {
     if (typeof html === 'string') {
       if (this.$el) {
@@ -23,15 +33,29 @@ export class Dom implements IDom {
     return this.$el?.outerHTML.trim();
   }
 
+  /**
+   * Метод очистки HTML
+   * @returns DOM
+   */
   clear() {
     this.html('');
     return this;
   }
 
+  /**
+   * Метод добавления слушателя событий
+   * @param {string} eventType - тип слушателя
+   * @param callback - колбэк-функция, которая будет срабатывать
+   */
   on(eventType: string, callback: (...arg: any[]) => void) {
     this.$el?.addEventListener(eventType, callback);
   }
 
+  /**
+   * Метод удаления слушателя событий
+   * @param {string} eventType - тип слушателя
+   * @param callback - колбэк-функция, которая будет удаляться
+   */
   off(eventType: string, callback: (...arg: any[]) => void) {
     this.$el?.removeEventListener(eventType, callback);
   }
@@ -50,6 +74,58 @@ export class Dom implements IDom {
     }
 
     return this;
+  }
+
+  /**
+   * Метод получения dom элемента по селектору
+   * @param {string} selector - селектор дом элемента, по которому осуществляется поиск
+   * @returns {Element | null | undefined} возвращает dom элемент
+   */
+  closest(selector: string) {
+    const nodeElement = this.$el?.closest(selector);
+
+    if (nodeElement) {
+      // eslint-disable-next-line
+      return $(nodeElement);
+    }
+
+    return null;
+  }
+
+  /**
+   * Метод получения информации элемента: размеры и положение
+   * @returns - объект с данными
+   */
+  getCoords() {
+    return this.$el?.getBoundingClientRect();
+  }
+
+  /**
+   * getter получения data-атрибутов элемента
+   */
+  get data() {
+    if (this.$el instanceof HTMLElement) {
+      return this.$el.dataset;
+    }
+
+    return null;
+  }
+
+  /**
+   * Метод получения dom всех дом элементов по селектору
+   * @param {string} selector
+   * @returns {NodeListOf<Element>} псевдомассив dom элементов
+   */
+  findAll(selector: string) {
+    return this.$el?.querySelectorAll(selector);
+  }
+
+  css(styles: Partial<Record<keyof CSSStyleDeclaration, string | number>>) {
+    Object.entries(styles).forEach(([key, value]) => {
+      if (this.$el instanceof HTMLElement) {
+        this.$el.style[key as any] = String(value);
+      }
+    });
   }
 }
 

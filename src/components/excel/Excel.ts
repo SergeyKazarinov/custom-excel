@@ -31,6 +31,7 @@ class Excel<T extends IExcelComponent> {
       if (component.name) {
         window[`c${component.name}`] = component;
       }
+
       return component;
     });
     return $root;
