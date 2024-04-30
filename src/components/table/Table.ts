@@ -1,9 +1,10 @@
 import ExcelComponent from '@core/ExcelComponent/ExcelComponent';
 import $, { Dom } from '@src/core/dom/dom';
+import handleMatrix from './helpers/handleMatrix';
 import handleResize from './helpers/handleResize';
+import isCell from './helpers/isCell';
 import createTable from './table.template';
 import TableSelection from './TableSelection';
-import isCell from './helpers/isCell';
 
 export interface ITable {
   onMousedown: (event: MouseEvent) => void;
@@ -38,7 +39,16 @@ class Table extends ExcelComponent implements ITable {
 
     if (isCell(event) && event.target instanceof Element) {
       const $target = $(event.target);
-      this.selection?.select($target);
+
+      if (event.shiftKey) {
+        const $cells = handleMatrix($target, this.selection.currentCell)
+          .map((id) => this.$root.find(`[data-id="${id}"]`))
+          .filter((item) => !!item) as Dom[];
+
+        this.selection.selectGroup($cells);
+      } else {
+        this.selection.select($target);
+      }
     }
   }
 }

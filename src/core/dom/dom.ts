@@ -1,3 +1,10 @@
+export interface IParsedId {
+  row: number;
+  col: number;
+}
+
+type ReturnType<T extends boolean> = T extends true ? IParsedId : string;
+
 export interface IDom {
   html(html: string | undefined): this | string | undefined;
   clear(): this;
@@ -7,11 +14,12 @@ export interface IDom {
   append(node: Dom | Element): this;
   closest(selector: string): Dom | null | undefined;
   getCoords(): DOMRect | undefined;
-  find(selector: string): Dom | null;
+  find(selector: string): Dom | undefined;
   findAll(selector: string): NodeListOf<Element> | undefined;
   css(styles: Partial<Record<keyof CSSStyleDeclaration, string>>): void;
   addClass(className: string): void;
   removeClass(className: string): void;
+  getId<T extends boolean>(parsed?: T): ReturnType<T> | undefined;
 }
 
 export class Dom implements IDom {
@@ -114,6 +122,19 @@ export class Dom implements IDom {
     return null;
   }
 
+  getId<T extends boolean>(parse?: T): ReturnType<T> | undefined {
+    if (parse) {
+      const parsed = this.getId(false)?.split(':');
+      return parsed
+        ? ({
+            row: Number(parsed[0]),
+            col: Number(parsed[1]),
+          } as ReturnType<T>)
+        : undefined;
+    }
+    return this.data?.id as ReturnType<T>;
+  }
+
   /**
    * Метод получения dom элемента по селектору
    * @param {string} selector
@@ -127,7 +148,7 @@ export class Dom implements IDom {
       return $(element);
     }
 
-    return null;
+    return undefined;
   }
 
   /**
@@ -139,6 +160,10 @@ export class Dom implements IDom {
     return this.$el?.querySelectorAll(selector);
   }
 
+  /**
+   * Метод установки инлайновых стилей на элемент
+   * @param {object} styles - объект типа {css свойство: значение}
+   */
   css(styles: Partial<Record<keyof CSSStyleDeclaration, string | number>>) {
     Object.entries(styles).forEach(([key, value]) => {
       if (this.$el instanceof HTMLElement) {
@@ -147,10 +172,18 @@ export class Dom implements IDom {
     });
   }
 
+  /**
+   * Метод добавления css класса
+   * @param {string} className - название класса
+   */
   addClass(className: string) {
     this.$el?.classList.add(className);
   }
 
+  /**
+   * Метод удаления css класса
+   * @param {string} className - название класса
+   */
   removeClass(className: string) {
     this.$el?.classList.remove(className);
   }
