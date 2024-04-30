@@ -7,8 +7,11 @@ export interface IDom {
   append(node: Dom | Element): this;
   closest(selector: string): Dom | null | undefined;
   getCoords(): DOMRect | undefined;
+  find(selector: string): Dom | null;
   findAll(selector: string): NodeListOf<Element> | undefined;
   css(styles: Partial<Record<keyof CSSStyleDeclaration, string>>): void;
+  addClass(className: string): void;
+  removeClass(className: string): void;
 }
 
 export class Dom implements IDom {
@@ -112,6 +115,22 @@ export class Dom implements IDom {
   }
 
   /**
+   * Метод получения dom элемента по селектору
+   * @param {string} selector
+   * @returns {NodeListOf<Element>} dom элементов
+   */
+  find(selector: string) {
+    const element = this.$el?.querySelector(selector);
+
+    if (element) {
+      // eslint-disable-next-line
+      return $(element);
+    }
+
+    return null;
+  }
+
+  /**
    * Метод получения dom всех дом элементов по селектору
    * @param {string} selector
    * @returns {NodeListOf<Element>} псевдомассив dom элементов
@@ -126,6 +145,14 @@ export class Dom implements IDom {
         this.$el.style[key as any] = String(value);
       }
     });
+  }
+
+  addClass(className: string) {
+    this.$el?.classList.add(className);
+  }
+
+  removeClass(className: string) {
+    this.$el?.classList.remove(className);
   }
 }
 
