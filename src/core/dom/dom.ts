@@ -7,11 +7,11 @@ type ReturnType<T extends boolean> = T extends true ? IParsedId : string;
 
 export interface IDom {
   html(html: string | undefined): this | string | undefined;
+  text(text: string): void;
   clear(): this;
   append(node: Element | Dom): this;
   on(evenType: string, callback: (...arg: any[]) => void): void;
   off(evenType: string, callback: (...arg: any[]) => void): void;
-  append(node: Dom | Element): this;
   closest(selector: string): Dom | null | undefined;
   getCoords(): DOMRect | undefined;
   find(selector: string): Dom | undefined;
@@ -31,6 +31,17 @@ export class Dom implements IDom {
   }
 
   /**
+   * getter получения data-атрибутов элемента
+   */
+  get data() {
+    if (this.$el instanceof HTMLElement) {
+      return this.$el.dataset;
+    }
+
+    return null;
+  }
+
+  /**
    * Метод добавления HTML разметки в dom дерево
    * @param {string} html - HTML разметка
    * @returns DOM
@@ -43,6 +54,14 @@ export class Dom implements IDom {
       }
     }
     return this.$el?.outerHTML.trim();
+  }
+
+  /**
+   * Метод добавления строки в содержимое тега
+   * @param {string} text строка, которая будет добавляться в элемент
+   */
+  text(text: string) {
+    if (this.$el) this.$el.textContent = text;
   }
 
   /**
@@ -110,17 +129,6 @@ export class Dom implements IDom {
    */
   getCoords() {
     return this.$el?.getBoundingClientRect();
-  }
-
-  /**
-   * getter получения data-атрибутов элемента
-   */
-  get data() {
-    if (this.$el instanceof HTMLElement) {
-      return this.$el.dataset;
-    }
-
-    return null;
   }
 
   /**

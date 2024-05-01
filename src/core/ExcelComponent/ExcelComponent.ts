@@ -1,41 +1,65 @@
 // eslint-disable-next-line
 import { Dom } from '@core/dom/dom';
-import DomListener from '@core/DomListener/DomListener';
+import DomListener from '@src/core/domListener/DomListener';
+import { IComponentOptions, TCallback } from '@src/types/components';
 import { TListeners } from '@src/types/listeners';
+import Observer from '../observer/Observer';
 
 export interface IExcelComponent {
   prepare(): void;
   toHTML(): string;
   init(): void;
   destroy(): void;
-  name?: string;
+  name: string;
 }
 
-export interface IOptions {
+export interface IOptions extends IComponentOptions {
   name?: string;
   listeners?: TListeners[];
 }
 class ExcelComponent extends DomListener implements IExcelComponent {
+  public name: string;
+
+  protected observer: Observer | null;
+
+  private unsubscribers: TCallback[];
+
   constructor($root: Dom, options: IOptions = {}) {
     super($root, options);
+    this.observer = options.observer ?? null;
+    this.name = options.name ?? '';
+    this.unsubscribers = [];
     this.prepare();
   }
 
-  /**
-   * Метод для написания логики в классах наследниках, которая выполняется при монтировании.
-   */
+  /* Метод для настройки компонента до инициализации */
   prepare() {}
 
+  /** Возвращает шаблон компонента */
   toHTML() {
     return '';
   }
 
+  /** Метод уведомления слушателя про событие */
+  $trigger(event: string, ...args: any[]) {
+    this.observer?.trigger(event, ...args);
+  }
+
+  /** Метод подписания на событие event */
+  $subscribe(event: string, fn: TCallback) {
+    const unsub = this.observer?.subscribe(event, fn);
+    if (unsub) this.unsubscribers.push(unsub);
+  }
+
+  /** Инициализация компонента */
   init() {
     this.initDomListeners();
   }
 
+  /** Удаление компонента и чистка слушателей */
   destroy() {
     this.removeDomListeners();
+    this.unsubscribers.forEach((unsub) => unsub());
   }
 }
 

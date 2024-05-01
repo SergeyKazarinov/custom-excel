@@ -1,9 +1,18 @@
-import ExcelComponent from '@core/ExcelComponent/ExcelComponent';
+import { Dom } from '@src/core/dom/dom';
+import ExcelComponent from '@src/core/excelComponent/ExcelComponent';
+import { IComponentOptions } from '@src/types/components';
 
 interface IHeader {}
 
 class Header extends ExcelComponent implements IHeader {
   static className: string = 'header';
+
+  constructor($root: Dom, options: IComponentOptions) {
+    super($root, {
+      name: 'Header',
+      ...options,
+    });
+  }
 
   toHTML(): string {
     return `

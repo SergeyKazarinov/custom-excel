@@ -1,6 +1,7 @@
-import ExcelComponent from '@core/ExcelComponent/ExcelComponent';
 import { KEYBOARDS } from '@src/consts/codes';
 import $, { Dom } from '@src/core/dom/dom';
+import ExcelComponent from '@src/core/excelComponent/ExcelComponent';
+import { IComponentOptions } from '@src/types/components';
 import handleMatrix from './helpers/handleMatrix';
 import handleResize from './helpers/handleResize';
 import isCell from './helpers/isCell';
@@ -18,9 +19,10 @@ class Table extends ExcelComponent implements ITable {
 
   private selection: TableSelection;
 
-  constructor($root: Dom) {
+  constructor($root: Dom, options: IComponentOptions) {
     super($root, {
       listeners: ['mousedown', 'keydown'],
+      ...options,
     });
     this.selection = new TableSelection();
   }
@@ -35,6 +37,10 @@ class Table extends ExcelComponent implements ITable {
     if ($cell) {
       this.selection.select($cell);
     }
+
+    this.$subscribe('formula:input', (text) => {
+      this.selection.currentCell?.text(text);
+    });
   }
 
   onMousedown(event: MouseEvent) {

@@ -1,7 +1,7 @@
 import { Dom } from '@core/dom/dom';
 import capitalize from '@src/helpers/capitalize';
 import { TListeners, TMethods } from '@src/types/listeners';
-import { IOptions } from '../ExcelComponent/ExcelComponent';
+import { IOptions } from '../excelComponent/ExcelComponent';
 
 /**
  * Переводит полученную строку в camelCase формат с префиксом 'on'

@@ -1,5 +1,6 @@
 import { Dom } from '@core/dom/dom';
-import ExcelComponent from '@core/ExcelComponent/ExcelComponent';
+import ExcelComponent from '@src/core/excelComponent/ExcelComponent';
+import { IComponentOptions } from '@src/types/components';
 
 interface IDivClickEvent extends MouseEvent {
   target: HTMLDivElement;
@@ -12,10 +13,11 @@ export interface IFormula {
 class Formula extends ExcelComponent implements IFormula {
   static className = 'excel__formula formula';
 
-  constructor($root: Dom) {
+  constructor($root: Dom, options: IComponentOptions) {
     super($root, {
       name: 'Formula',
       listeners: ['input'],
+      ...options,
     });
   }
 
@@ -29,7 +31,9 @@ class Formula extends ExcelComponent implements IFormula {
   }
 
   onInput(event: IDivClickEvent) {
-    console.log(event.target.textContent?.trim());
+    const text = event.target.textContent?.trim();
+
+    this.$trigger('formula:input', text);
   }
 }
 
