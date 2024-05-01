@@ -28,7 +28,7 @@ class TableSelection implements ITableSelection {
   select($el: Dom) {
     this.clear();
     this.group.push($el);
-    $el.addClass(TableSelection.selectedClassName);
+    $el.focus().addClass(TableSelection.selectedClassName);
 
     this.currentCell = $el;
   }

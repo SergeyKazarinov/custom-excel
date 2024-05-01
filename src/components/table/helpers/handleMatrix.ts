@@ -8,7 +8,7 @@ import range from './range';
  * @returns Массив ID диапазона ячеек
  */
 const handleMatrix = ($target: Dom, $current: Dom | null) => {
-  const target = $target.getId<true>(true);
+  const target = $target.getId(true);
   const current = $current?.getId(true);
 
   let cols: number[] = [];

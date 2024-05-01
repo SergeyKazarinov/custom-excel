@@ -1,13 +1,16 @@
 import ExcelComponent from '@core/ExcelComponent/ExcelComponent';
+import { KEYBOARDS } from '@src/consts/codes';
 import $, { Dom } from '@src/core/dom/dom';
 import handleMatrix from './helpers/handleMatrix';
 import handleResize from './helpers/handleResize';
 import isCell from './helpers/isCell';
+import nextSelector from './helpers/nextSelector';
 import createTable from './table.template';
 import TableSelection from './TableSelection';
 
 export interface ITable {
   onMousedown: (event: MouseEvent) => void;
+  onKeydown: (event: KeyboardEvent) => void;
 }
 
 class Table extends ExcelComponent implements ITable {
@@ -17,7 +20,7 @@ class Table extends ExcelComponent implements ITable {
 
   constructor($root: Dom) {
     super($root, {
-      listeners: ['mousedown'],
+      listeners: ['mousedown', 'keydown'],
     });
     this.selection = new TableSelection();
   }
@@ -48,6 +51,20 @@ class Table extends ExcelComponent implements ITable {
         this.selection.selectGroup($cells);
       } else {
         this.selection.select($target);
+      }
+    }
+  }
+
+  onKeydown(event: KeyboardEvent) {
+    const keys = Object.values<string>(KEYBOARDS);
+    const { key } = event;
+
+    if (keys.includes(key) && !event.shiftKey) {
+      event.preventDefault();
+      const currentCell = this.selection.currentCell?.getId(true);
+      if (currentCell) {
+        const $next = this.$root.find(nextSelector(key, currentCell));
+        if ($next) this.selection.select($next);
       }
     }
   }

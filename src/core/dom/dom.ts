@@ -16,6 +16,7 @@ export interface IDom {
   getCoords(): DOMRect | undefined;
   find(selector: string): Dom | undefined;
   findAll(selector: string): NodeListOf<Element> | undefined;
+  focus(): this;
   css(styles: Partial<Record<keyof CSSStyleDeclaration, string>>): void;
   addClass(className: string): void;
   removeClass(className: string): void;
@@ -122,6 +123,11 @@ export class Dom implements IDom {
     return null;
   }
 
+  /**
+   * Метод получения data-id ячейки
+   * @param {boolean} parse - флаг, определяющий в каком формате вернуть данные: объект или строка
+   * @returns Объект типа {ros, col} или строку типа 'row:col`
+   */
   getId<T extends boolean>(parse?: T): ReturnType<T> | undefined {
     if (parse) {
       const parsed = this.getId(false)?.split(':');
@@ -158,6 +164,11 @@ export class Dom implements IDom {
    */
   findAll(selector: string) {
     return this.$el?.querySelectorAll(selector);
+  }
+
+  focus() {
+    if (this.$el instanceof HTMLElement) this.$el?.focus();
+    return this;
   }
 
   /**
