@@ -16,11 +16,12 @@ const handleResize = (event: MouseEvent, $root: Dom) => {
     const sideProperty = type === 'col' ? 'bottom' : 'right';
     const sideValue = type === 'col' ? '-100vh' : '-100vw';
     let value: number;
-
-    $resizer.css({
-      opacity: 1,
-      [sideProperty]: sideValue,
-    });
+    if (type) {
+      $resizer.css({
+        opacity: 1,
+        [sideProperty]: sideValue,
+      });
+    }
 
     document.onmousemove = (e) => {
       if (coords) {
@@ -54,11 +55,13 @@ const handleResize = (event: MouseEvent, $root: Dom) => {
       } else if (resizeAttr === 'row') {
         $parent?.css({ height: `${value}px` });
       }
-      $resizer.css({
-        opacity: 0,
-        bottom: 0,
-        right: 0,
-      });
+      if (type) {
+        $resizer.css({
+          opacity: 0,
+          bottom: 0,
+          right: 0,
+        });
+      }
     };
   }
 };

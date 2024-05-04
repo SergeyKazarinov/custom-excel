@@ -5,9 +5,16 @@ import toChar from '@src/helpers/toChar';
  * Функция создания ячейки таблицы
  * @returns {HTMLElement} - ячейку таблицы
  */
-const createCell = (_: unknown, colNumber: number) => /* html */ `
-    <div class="table__cell" data-col=${colNumber} contenteditable></div>
-  `;
+const createCell = (rowNumber: number) => (_: unknown, colNumber: number) =>
+  /* html */ `
+<div
+  class="table__cell"
+  data-type="cell"
+  data-col=${colNumber}
+  data-id=${`${rowNumber}:${colNumber + 1}`}
+  contenteditable
+></div>
+`;
 
 /**
  * функция создания колонки
@@ -47,11 +54,11 @@ const createTable = (rowsCount: number = 100) => {
   const rows = [];
 
   const cols = Array.from({ length: colsCount }).map(toChar).map(createCol).join('');
-  const cells = Array.from({ length: colsCount }).map(createCell).join('');
+  const cells = (rowNumber: number) => Array.from({ length: colsCount }).map(createCell(rowNumber)).join('');
 
   rows.push(createRow({ children: cols }));
-  Array.from({ length: rowsCount }).forEach((_, index) =>
-    rows.push(createRow({ children: cells, rowName: String(index + 1) }))
+  Array.from({ length: rowsCount }).forEach((_, rowNumber) =>
+    rows.push(createRow({ children: cells(rowNumber + 1), rowName: String(rowNumber + 1) }))
   );
 
   return `

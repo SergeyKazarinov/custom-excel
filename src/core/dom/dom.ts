@@ -1,14 +1,26 @@
+export interface IParsedId {
+  row: number;
+  col: number;
+}
+
+type ReturnType<T extends boolean> = T extends true ? IParsedId : string;
+
 export interface IDom {
   html(html: string | undefined): this | string | undefined;
+  text(text: string): void;
   clear(): this;
   append(node: Element | Dom): this;
   on(evenType: string, callback: (...arg: any[]) => void): void;
   off(evenType: string, callback: (...arg: any[]) => void): void;
-  append(node: Dom | Element): this;
   closest(selector: string): Dom | null | undefined;
   getCoords(): DOMRect | undefined;
+  find(selector: string): Dom | undefined;
   findAll(selector: string): NodeListOf<Element> | undefined;
+  focus(): this;
   css(styles: Partial<Record<keyof CSSStyleDeclaration, string>>): void;
+  addClass(className: string): this;
+  removeClass(className: string): this;
+  getId<T extends boolean>(parsed?: T): ReturnType<T> | undefined;
 }
 
 export class Dom implements IDom {
@@ -16,6 +28,17 @@ export class Dom implements IDom {
 
   constructor(selector: string | Element) {
     this.$el = typeof selector === 'string' ? document.querySelector(selector) : selector;
+  }
+
+  /**
+   * getter получения data-атрибутов элемента
+   */
+  get data() {
+    if (this.$el instanceof HTMLElement) {
+      return this.$el.dataset;
+    }
+
+    return null;
   }
 
   /**
@@ -31,6 +54,22 @@ export class Dom implements IDom {
       }
     }
     return this.$el?.outerHTML.trim();
+  }
+
+  /**
+   * Метод добавления строки в содержимое тега
+   * @param {string} text строка, которая будет добавляться в элемент
+   */
+  text(text?: string | Dom) {
+    if (typeof text === 'string') {
+      if (this.$el) this.$el.textContent = text;
+      return this;
+    }
+
+    if (this.$el?.tagName.toLowerCase() === 'input' && this.$el instanceof HTMLInputElement) {
+      return this.$el.value.trim();
+    }
+    return this.$el?.textContent?.trim();
   }
 
   /**
@@ -101,14 +140,37 @@ export class Dom implements IDom {
   }
 
   /**
-   * getter получения data-атрибутов элемента
+   * Метод получения data-id ячейки
+   * @param {boolean} parse - флаг, определяющий в каком формате вернуть данные: объект или строка
+   * @returns Объект типа {ros, col} или строку типа 'row:col`
    */
-  get data() {
-    if (this.$el instanceof HTMLElement) {
-      return this.$el.dataset;
+  getId<T extends boolean>(parse?: T): ReturnType<T> | undefined {
+    if (parse) {
+      const parsed = this.getId(false)?.split(':');
+      return parsed
+        ? ({
+            row: Number(parsed[0]),
+            col: Number(parsed[1]),
+          } as ReturnType<T>)
+        : undefined;
+    }
+    return this.data?.id as ReturnType<T>;
+  }
+
+  /**
+   * Метод получения dom элемента по селектору
+   * @param {string} selector
+   * @returns {NodeListOf<Element>} dom элементов
+   */
+  find(selector: string) {
+    const element = this.$el?.querySelector(selector);
+
+    if (element) {
+      // eslint-disable-next-line
+      return $(element);
     }
 
-    return null;
+    return undefined;
   }
 
   /**
@@ -120,12 +182,39 @@ export class Dom implements IDom {
     return this.$el?.querySelectorAll(selector);
   }
 
+  focus() {
+    if (this.$el instanceof HTMLElement) this.$el?.focus();
+    return this;
+  }
+
+  /**
+   * Метод установки инлайновых стилей на элемент
+   * @param {object} styles - объект типа {css свойство: значение}
+   */
   css(styles: Partial<Record<keyof CSSStyleDeclaration, string | number>>) {
     Object.entries(styles).forEach(([key, value]) => {
       if (this.$el instanceof HTMLElement) {
         this.$el.style[key as any] = String(value);
       }
     });
+  }
+
+  /**
+   * Метод добавления css класса
+   * @param {string} className - название класса
+   */
+  addClass(className: string) {
+    this.$el?.classList.add(className);
+    return this;
+  }
+
+  /**
+   * Метод удаления css класса
+   * @param {string} className - название класса
+   */
+  removeClass(className: string) {
+    this.$el?.classList.remove(className);
+    return this;
   }
 }
 

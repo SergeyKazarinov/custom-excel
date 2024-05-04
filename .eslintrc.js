@@ -25,5 +25,6 @@ module.exports = {
     '@typescript-eslint/no-explicit-any': 'warn',
     'class-methods-use-this': 'off',
     '@typescript-eslint/ban-ts-comment': 'warn',
+    'no-plusplus': 'off',
   },
 };

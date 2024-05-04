@@ -1,15 +1,17 @@
-import ExcelComponent from '@core/ExcelComponent/ExcelComponent';
+import ExcelComponent from '@src/core/excelComponent/ExcelComponent';
 import { Dom } from '@src/core/dom/dom';
+import { IComponentOptions } from '@src/types/components';
 
 export interface IToolbar {}
 
 class Toolbar extends ExcelComponent implements IToolbar {
   static className = 'excel__toolbar toolbar';
 
-  constructor($root: Dom) {
+  constructor($root: Dom, options: IComponentOptions) {
     super($root, {
       name: 'Toolbar',
       listeners: ['click'],
+      ...options,
     });
   }
 
