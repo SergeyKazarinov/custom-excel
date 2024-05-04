@@ -18,8 +18,8 @@ export interface IDom {
   findAll(selector: string): NodeListOf<Element> | undefined;
   focus(): this;
   css(styles: Partial<Record<keyof CSSStyleDeclaration, string>>): void;
-  addClass(className: string): void;
-  removeClass(className: string): void;
+  addClass(className: string): this;
+  removeClass(className: string): this;
   getId<T extends boolean>(parsed?: T): ReturnType<T> | undefined;
 }
 
@@ -205,6 +205,7 @@ export class Dom implements IDom {
    */
   addClass(className: string) {
     this.$el?.classList.add(className);
+    return this;
   }
 
   /**
@@ -213,6 +214,7 @@ export class Dom implements IDom {
    */
   removeClass(className: string) {
     this.$el?.classList.remove(className);
+    return this;
   }
 }
 
