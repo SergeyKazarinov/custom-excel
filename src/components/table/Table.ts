@@ -9,9 +9,14 @@ import nextSelector from './helpers/nextSelector';
 import createTable from './table.template';
 import TableSelection from './TableSelection';
 
+interface IInputEvent extends InputEvent {
+  target: HTMLInputElement;
+}
 export interface ITable {
   onMousedown: (event: MouseEvent) => void;
   onKeydown: (event: KeyboardEvent) => void;
+  onInput(event: IInputEvent): void;
+  selectCell($cell: Dom): void;
 }
 
 class Table extends ExcelComponent implements ITable {
@@ -21,7 +26,7 @@ class Table extends ExcelComponent implements ITable {
 
   constructor($root: Dom, options: IComponentOptions) {
     super($root, {
-      listeners: ['mousedown', 'keydown'],
+      listeners: ['mousedown', 'keydown', 'input'],
       ...options,
     });
     this.selection = new TableSelection();
@@ -31,15 +36,24 @@ class Table extends ExcelComponent implements ITable {
     return createTable();
   }
 
+  selectCell($cell: Dom): void {
+    this.selection.select($cell);
+    this.$trigger('table:select', $cell);
+  }
+
   init() {
     super.init();
     const $cell = this.$root.find(`[data-id="1:1"]`);
     if ($cell) {
-      this.selection.select($cell);
+      this.selectCell($cell);
     }
 
     this.$subscribe('formula:input', (text) => {
       this.selection.currentCell?.text(text);
+    });
+
+    this.$subscribe('formula:done', () => {
+      this.selection.currentCell?.focus();
     });
   }
 
@@ -61,7 +75,7 @@ class Table extends ExcelComponent implements ITable {
     }
   }
 
-  onKeydown(event: KeyboardEvent) {
+  onKeydown(event: KeyboardEvent): void {
     const keys = Object.values<string>(KEYBOARDS);
     const { key } = event;
 
@@ -70,9 +84,15 @@ class Table extends ExcelComponent implements ITable {
       const currentCell = this.selection.currentCell?.getId(true);
       if (currentCell) {
         const $next = this.$root.find(nextSelector(key, currentCell));
-        if ($next) this.selection.select($next);
+        if ($next) {
+          this.selectCell($next);
+        }
       }
     }
+  }
+
+  onInput(event: IInputEvent) {
+    this.$trigger('table:input', $(event.target));
   }
 }
 

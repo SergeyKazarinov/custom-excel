@@ -60,8 +60,16 @@ export class Dom implements IDom {
    * Метод добавления строки в содержимое тега
    * @param {string} text строка, которая будет добавляться в элемент
    */
-  text(text: string) {
-    if (this.$el) this.$el.textContent = text;
+  text(text?: string | Dom) {
+    if (typeof text === 'string') {
+      if (this.$el) this.$el.textContent = text;
+      return this;
+    }
+
+    if (this.$el?.tagName.toLowerCase() === 'input' && this.$el instanceof HTMLInputElement) {
+      return this.$el.value.trim();
+    }
+    return this.$el?.textContent?.trim();
   }
 
   /**

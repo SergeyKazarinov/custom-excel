@@ -1,4 +1,5 @@
 import { TCallback, TObserverListeners } from '@src/types/components';
+import { TTriggers } from '@src/types/observers';
 
 class Observer {
   public listeners: TObserverListeners;
@@ -12,7 +13,7 @@ class Observer {
    * @param eventName
    * @param args
    */
-  trigger(eventName: string, ...args: any[]) {
+  trigger(eventName: TTriggers, ...args: any[]) {
     this.listeners[eventName].forEach((listener) => {
       listener(...args);
     });
@@ -23,7 +24,7 @@ class Observer {
    * @param event
    * @param fn
    */
-  subscribe(event: string, fn: TCallback): TCallback {
+  subscribe(event: TTriggers, fn: TCallback): TCallback {
     this.listeners[event] = this.listeners[event] || [];
     this.listeners[event].push(fn);
 

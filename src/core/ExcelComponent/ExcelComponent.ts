@@ -3,6 +3,7 @@ import { Dom } from '@core/dom/dom';
 import DomListener from '@src/core/domListener/DomListener';
 import { IComponentOptions, TCallback } from '@src/types/components';
 import { TListeners } from '@src/types/listeners';
+import { TTriggers } from '@src/types/observers';
 import Observer from '../observer/Observer';
 
 export interface IExcelComponent {
@@ -41,12 +42,12 @@ class ExcelComponent extends DomListener implements IExcelComponent {
   }
 
   /** Метод уведомления слушателя про событие */
-  $trigger(event: string, ...args: any[]) {
+  $trigger(event: TTriggers, ...args: any[]) {
     this.observer?.trigger(event, ...args);
   }
 
   /** Метод подписания на событие event */
-  $subscribe(event: string, fn: TCallback) {
+  $subscribe(event: TTriggers, fn: TCallback) {
     const unsub = this.observer?.subscribe(event, fn);
     if (unsub) this.unsubscribers.push(unsub);
   }
