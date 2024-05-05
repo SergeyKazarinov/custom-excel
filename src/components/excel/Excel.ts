@@ -1,9 +1,11 @@
 import $ from '@core/dom/dom';
 import { IExcelComponent } from '@src/core/excelComponent/ExcelComponent';
 import Observer from '@src/core/observer/Observer';
+import { IRootState } from '@src/store/store.types';
 
 interface IExcelOptions<T> {
   components: (new (...arg: any[]) => T)[];
+  store: any;
 }
 
 class Excel<T extends IExcelComponent> {
@@ -15,11 +17,14 @@ class Excel<T extends IExcelComponent> {
 
   private observer: Observer;
 
+  private store: IRootState;
+
   constructor(selector: string, options: IExcelOptions<T>) {
     this.$el = $(selector);
     this.components = options.components || [];
     this.objectComponents = [];
     this.observer = new Observer();
+    this.store = options.store;
   }
 
   getRoot() {
@@ -27,6 +32,7 @@ class Excel<T extends IExcelComponent> {
 
     const componentOptions = {
       observer: this.observer,
+      store: this.store,
     };
 
     this.objectComponents = this.components.map((Component) => {

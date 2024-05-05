@@ -39,6 +39,7 @@ class Table extends ExcelComponent implements ITable {
   selectCell($cell: Dom): void {
     this.selection.select($cell);
     this.$trigger('table:select', $cell);
+    this.$dispatch({ type: 'TEST' });
   }
 
   init() {
@@ -55,6 +56,10 @@ class Table extends ExcelComponent implements ITable {
     this.$subscribe('formula:done', () => {
       this.selection.currentCell?.focus();
     });
+
+    this.$subscribeStore((state) => {
+      console.info(`Table`, state);
+    });
   }
 
   onMousedown(event: MouseEvent) {
@@ -70,7 +75,7 @@ class Table extends ExcelComponent implements ITable {
 
         this.selection.selectGroup($cells);
       } else {
-        this.selection.select($target);
+        this.selectCell($target);
       }
     }
   }

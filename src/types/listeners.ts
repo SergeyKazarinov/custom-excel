@@ -1,5 +1,5 @@
 export type TListeners = 'input' | 'click' | 'mousedown' | 'mousemove' | 'mouseup' | 'keydown';
 
-export type TUpperListeners = 'Input' | 'Click' | 'Mousedown' | 'Mousemove' | 'Mouseup' | 'Keydown';
+export type TUpperListeners = Capitalize<TListeners>;
 
-export type TMethods = 'onInput' | 'onClick' | 'onMousedown' | 'onMousemove' | 'onMouseup' | 'onKeydown';
+export type TMethods = TUpperListeners extends infer U ? (U extends string ? `on${U}` : never) : never;

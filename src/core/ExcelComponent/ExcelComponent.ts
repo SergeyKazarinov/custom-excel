@@ -4,12 +4,17 @@ import DomListener from '@src/core/domListener/DomListener';
 import { IComponentOptions, TCallback } from '@src/types/components';
 import { TListeners } from '@src/types/listeners';
 import { TTriggers } from '@src/types/observers';
+import { IRootState, TAction } from '@src/store/store.types';
 import Observer from '../observer/Observer';
+import { IReturnCreateStore } from '../store/createStore';
 
 export interface IExcelComponent {
   prepare(): void;
   toHTML(): string;
   init(): void;
+  $trigger(event: TTriggers, ...args: any[]): void;
+  $subscribe(event: TTriggers, fn: TCallback): void;
+  $dispatch(action: TAction): void;
   destroy(): void;
   name: string;
 }
@@ -25,12 +30,18 @@ class ExcelComponent extends DomListener implements IExcelComponent {
 
   private unsubscribers: TCallback[];
 
+  private store: IReturnCreateStore<IRootState, TAction>;
+
+  private storeSub: ReturnType<typeof this.store.subscribe> | null;
+
   constructor($root: Dom, options: IOptions = {}) {
     super($root, options);
     this.observer = options.observer ?? null;
+    this.store = options.store;
     this.name = options.name ?? '';
     this.unsubscribers = [];
     this.prepare();
+    this.storeSub = null;
   }
 
   /* Метод для настройки компонента до инициализации */
@@ -52,6 +63,15 @@ class ExcelComponent extends DomListener implements IExcelComponent {
     if (unsub) this.unsubscribers.push(unsub);
   }
 
+  /** Метод для взаимодействия со store */
+  $dispatch(action: TAction) {
+    this.store.dispatch(action);
+  }
+
+  $subscribeStore(fn: (state: IRootState) => void) {
+    this.storeSub = this.store.subscribe(fn);
+  }
+
   /** Инициализация компонента */
   init() {
     this.initDomListeners();
@@ -61,6 +81,7 @@ class ExcelComponent extends DomListener implements IExcelComponent {
   destroy() {
     this.removeDomListeners();
     this.unsubscribers.forEach((unsub) => unsub());
+    this.storeSub?.unsubscribe();
   }
 }
 
