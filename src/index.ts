@@ -3,12 +3,16 @@ import Formula from './components/formula/Formula';
 import Header from './components/header/Header';
 import Table from './components/table/Table';
 import Toolbar from './components/toolbar/Toolbar';
-import createStore from './core/store/createStore';
+import { EXCEL_STATE } from './consts/localStorage';
+import createStore from './store/createStore';
+import localStorageFn from './helpers/localStorage';
 import './scss/index.scss';
 import rootReducer from './store/rootReducer';
 
-const store = createStore(rootReducer, {
-  tableTitle: 'MyTable',
+const store = createStore(rootReducer, localStorageFn(EXCEL_STATE));
+
+store.subscribe((state) => {
+  localStorageFn(EXCEL_STATE, state);
 });
 
 const excel = new Excel<Header | Toolbar | Formula | Table>('#app', {

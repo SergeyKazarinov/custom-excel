@@ -16,7 +16,7 @@ class Toolbar extends ExcelComponent implements IToolbar {
   }
 
   onClick(event: Event) {
-    console.log(event.target);
+    console.info(event.target);
   }
 
   toHTML(): string {

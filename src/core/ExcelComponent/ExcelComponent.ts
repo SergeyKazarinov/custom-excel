@@ -4,9 +4,9 @@ import DomListener from '@src/core/domListener/DomListener';
 import { IComponentOptions, TCallback } from '@src/types/components';
 import { TListeners } from '@src/types/listeners';
 import { TTriggers } from '@src/types/observers';
-import { IRootState, TAction } from '@src/store/store.types';
+import { IReturnCreateStore, IRootState } from '@src/store/store.types';
+import { TActions } from '@src/store/action.types';
 import Observer from '../observer/Observer';
-import { IReturnCreateStore } from '../store/createStore';
 
 export interface IExcelComponent {
   prepare(): void;
@@ -14,7 +14,7 @@ export interface IExcelComponent {
   init(): void;
   $trigger(event: TTriggers, ...args: any[]): void;
   $subscribe(event: TTriggers, fn: TCallback): void;
-  $dispatch(action: TAction): void;
+  $dispatch(action: TActions): void;
   destroy(): void;
   name: string;
 }
@@ -30,7 +30,7 @@ class ExcelComponent extends DomListener implements IExcelComponent {
 
   private unsubscribers: TCallback[];
 
-  private store: IReturnCreateStore<IRootState, TAction>;
+  protected store: IReturnCreateStore<IRootState, TActions>;
 
   private storeSub: ReturnType<typeof this.store.subscribe> | null;
 
@@ -64,7 +64,7 @@ class ExcelComponent extends DomListener implements IExcelComponent {
   }
 
   /** Метод для взаимодействия со store */
-  $dispatch(action: TAction) {
+  $dispatch(action: TActions) {
     this.store.dispatch(action);
   }
 

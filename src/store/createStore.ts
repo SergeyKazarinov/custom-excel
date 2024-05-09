@@ -1,17 +1,8 @@
-import { IRootState, TAction } from '@src/store/store.types';
+import { IRootState, TCreateStore } from '@src/store/store.types';
 import { TCallback } from '@src/types/components';
+import { TActions } from './action.types';
 
-export type TRootReducer<S, A> = (state: S, action: A) => S;
-
-export interface IReturnCreateStore<S, A> {
-  subscribe(fn: (state: S) => void): { unsubscribe(): void };
-  dispatch(action: A): void;
-  getState(): S;
-}
-
-export type TCreateStore<S, A> = (rootReducer: TRootReducer<S, A>, initialState?: S) => IReturnCreateStore<S, A>;
-
-const createStore: TCreateStore<IRootState, TAction> = (rootReducer, initialState = {}) => {
+const createStore: TCreateStore<IRootState, TActions> = (rootReducer, initialState = { colState: {} }) => {
   let state = rootReducer({ ...initialState }, { type: '__INIT__' });
   let listeners: TCallback[] = [];
 
@@ -25,7 +16,7 @@ const createStore: TCreateStore<IRootState, TAction> = (rootReducer, initialStat
         },
       };
     },
-    dispatch(action: TAction) {
+    dispatch(action: TActions) {
       state = rootReducer(state, action);
       listeners.forEach((listener) => listener(state));
     },
