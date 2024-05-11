@@ -3,11 +3,14 @@ import { TActions } from './action.types';
 
 const rootReducer = (state: IRootState, action: TActions): IRootState => {
   let prevState;
+  let field: 'colState' | 'rowState';
   switch (action.type) {
     case 'TABLE_RESIZE':
-      prevState = state.colState || {};
+      field = action.payload.type === 'col' ? 'colState' : 'rowState';
+      prevState = state[field] || {};
       prevState[action.payload.id] = action.payload.value;
-      return { ...state, colState: prevState };
+      console.info(field);
+      return { ...state, [field]: prevState };
     default:
       return state;
   }

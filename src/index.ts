@@ -8,8 +8,9 @@ import createStore from './store/createStore';
 import localStorageFn from './helpers/localStorage';
 import './scss/index.scss';
 import rootReducer from './store/rootReducer';
+import initialState from './store/initialState';
 
-const store = createStore(rootReducer, localStorageFn(EXCEL_STATE));
+const store = createStore(rootReducer, initialState);
 
 store.subscribe((state) => {
   localStorageFn(EXCEL_STATE, state);

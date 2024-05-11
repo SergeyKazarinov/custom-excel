@@ -2,7 +2,7 @@ import { IRootState, TCreateStore } from '@src/store/store.types';
 import { TCallback } from '@src/types/components';
 import { TActions } from './action.types';
 
-const createStore: TCreateStore<IRootState, TActions> = (rootReducer, initialState = { colState: {} }) => {
+const createStore: TCreateStore<IRootState, TActions> = (rootReducer, initialState) => {
   let state = rootReducer({ ...initialState }, { type: '__INIT__' });
   let listeners: TCallback[] = [];
 

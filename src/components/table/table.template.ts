@@ -1,13 +1,29 @@
 import { CHART_CODES } from '@src/consts/codes';
-import { DEFAULT_WIDTH } from '@src/consts/table';
+import { DEFAULT_HEIGHT, DEFAULT_WIDTH } from '@src/consts/table';
 import toChar from '@src/helpers/toChar';
 import { IRootState } from '@src/store/store.types';
 import { ICreateCol, ICreateTable } from './table.types';
 
+/**
+ * Создает значение ширины столбца
+ *
+ * @param {Record<string, number>} colState - объект типа "ключ/значение" размеров ширины столбцов
+ * @param {number} index - индекс столбца
+ * @returns {string} ширину столбца
+ */
 const getWidth = (colState: Record<string, number>, index: number) => `${colState[index] || DEFAULT_WIDTH}px`;
 
+/**
+ * Создает значение высоты строки
+ *
+ * @param {Record<string, number>} colState - объект типа "ключ/значение" размеров высоты строк
+ * @param {number} index - индекс строки
+ * @returns {string} высоту строки
+ */
+const getHeight = (rowState: Record<string, number>, index: number) => `${rowState[index] || DEFAULT_HEIGHT}px`;
+
 const withWidthFrom =
-  (state: IRootState | undefined = { colState: {} }) =>
+  (state: IRootState | undefined = { colState: {}, rowState: {} }) =>
   (colName: string, index: number): ICreateCol => ({
     colName,
     index,
@@ -53,11 +69,19 @@ const createCol = ({ colName, index, colWidth }: ICreateCol) => /* html */ `
  * @property {string} rowName - название строки
  * @returns {HTMLElement} строку таблицы
  */
-const createRow = ({ children = '', rowName = '' }: { children?: string; rowName?: string }) => {
+const createRow = ({
+  children = '',
+  rowName = '',
+  rowState,
+}: {
+  children?: string;
+  rowName?: string;
+  rowState: Record<string, number>;
+}) => {
   const resize = rowName && /* html */ `<div class="table__row-resize" data-resize="row"></div>`;
-
+  const height = rowState ? getHeight(rowState, Number(rowName)) : `${DEFAULT_HEIGHT}px`;
   return /* html */ `
-    <div class="table__row" ${rowName && `data-type="resizable"`}>
+    <div class="table__row" ${rowName && `data-type="resizable"`} data-row=${rowName} style="height: ${height}">
       <div class="table__row_info">${rowName}
         ${resize}
       </div>
@@ -76,9 +100,9 @@ const createTable = ({ rowsCount = 100, state }: ICreateTable) => {
 
   const cells = (rowNumber: number) => Array.from({ length: colsCount }).map(createCell(rowNumber, state)).join('');
 
-  rows.push(createRow({ children: cols }));
+  rows.push(createRow({ children: cols, rowState: state.rowState }));
   Array.from({ length: rowsCount }).forEach((_, rowNumber) =>
-    rows.push(createRow({ children: cells(rowNumber + 1), rowName: String(rowNumber + 1) }))
+    rows.push(createRow({ children: cells(rowNumber + 1), rowName: String(rowNumber + 1), rowState: state.rowState }))
   );
 
   return `

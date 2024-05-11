@@ -56,11 +56,12 @@ const handleResize = (event: MouseEvent, $root: Dom): Promise<ITableResize> =>
         } else if (resizeAttr === 'row') {
           $parent?.css({ height: `${value}px` });
         }
-        const id = type === 'col' ? $parent?.data?.col : null;
+        const id = type === 'col' ? $parent?.data?.col : $parent?.data?.row;
 
-        if (id) {
+        if (id && (resizeAttr === 'row' || resizeAttr === 'col')) {
           resolve({
             value,
+            type: resizeAttr,
             id,
           });
         }
