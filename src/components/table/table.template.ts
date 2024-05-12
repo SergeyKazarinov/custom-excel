@@ -23,7 +23,7 @@ const getWidth = (colState: Record<string, number>, index: number) => `${colStat
 const getHeight = (rowState: Record<string, number>, index: number) => `${rowState[index] || DEFAULT_HEIGHT}px`;
 
 const withWidthFrom =
-  (state: IRootState | undefined = { colState: {}, rowState: {} }) =>
+  (state: IRootState) =>
   (colName: string, index: number): ICreateCol => ({
     colName,
     index,
@@ -36,15 +36,17 @@ const withWidthFrom =
  */
 const createCell = (rowNumber: number, state: IRootState) => (_: unknown, colNumber: number) => {
   const width = getWidth(state.colState, colNumber);
+  const cellId = `${rowNumber}:${colNumber + 1}`;
+  const data = state.dataState[cellId];
   return /* html */ `
     <div
       class="table__cell"
       style="width: ${width}"
       data-type="cell"
       data-col=${colNumber}
-      data-id=${`${rowNumber}:${colNumber + 1}`}
+      data-id=${cellId}
       contenteditable
-    ></div>
+    >${data || ''}</div>
     `;
 };
 

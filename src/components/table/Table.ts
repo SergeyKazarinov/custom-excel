@@ -42,7 +42,6 @@ class Table extends ExcelComponent implements ITable {
   selectCell($cell: Dom): void {
     this.selection.select($cell);
     this.$trigger('table:select', $cell);
-    this.$dispatch({ type: 'TEST' });
   }
 
   async resizeTable(event: MouseEvent): Promise<void> {
@@ -63,6 +62,7 @@ class Table extends ExcelComponent implements ITable {
 
     this.$subscribe('formula:input', (text) => {
       this.selection.currentCell?.text(text);
+      this.updateCurrentTextInStore(text);
     });
 
     this.$subscribe('formula:done', () => {
@@ -108,8 +108,21 @@ class Table extends ExcelComponent implements ITable {
     }
   }
 
+  updateCurrentTextInStore(text: string) {
+    const id = this.selection.currentCell?.getId<false>();
+    if (id) {
+      this.$dispatch(
+        actions.changeTextActionCreator({
+          id,
+          text,
+        })
+      );
+    }
+  }
+
   onInput(event: IInputEvent) {
-    this.$trigger('table:input', $(event.target));
+    // this.$trigger('table:input', $(event.target));
+    this.updateCurrentTextInStore($(event.target).text());
   }
 }
 

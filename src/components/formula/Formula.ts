@@ -1,6 +1,7 @@
 import $, { Dom } from '@core/dom/dom';
 import ExcelComponent from '@src/core/excelComponent/ExcelComponent';
 import { IComponentOptions } from '@src/types/components';
+import * as actions from '@src/store/actions';
 
 interface IDivClickEvent extends MouseEvent {
   target: HTMLDivElement;
@@ -31,10 +32,17 @@ class Formula extends ExcelComponent implements IFormula {
     super.init();
     this.$formula = this.$root.find('#formula');
     this.$subscribe('table:select', ($cell: Dom) => {
+      const id = $cell.getId<false>();
+      if (id) {
+        this.$dispatch(actions.changeTextActionCreator({ text: $cell.text(), id }));
+      }
       this.$formula?.text($cell.text());
     });
-    this.$subscribe('table:input', ($cell: Dom) => {
-      this.$formula?.text($cell.text());
+    // this.$subscribe('table:input', ($cell: Dom) => {
+    //   this.$formula?.text($cell.text());
+    // });
+    this.$subscribeStore((state) => {
+      this.$formula?.text(state.currentText);
     });
   }
 

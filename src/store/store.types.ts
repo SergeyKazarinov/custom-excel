@@ -11,5 +11,6 @@ export type TCreateStore<S, A> = (rootReducer: TRootReducer<S, A>, initialState:
 export interface IRootState {
   colState: Record<string, number>;
   rowState: Record<string, number>;
-  [key: string]: any;
+  dataState: Record<string, string>;
+  currentText: string;
 }

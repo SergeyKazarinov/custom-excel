@@ -8,7 +8,7 @@ import createStore from './store/createStore';
 import localStorageFn from './helpers/localStorage';
 import './scss/index.scss';
 import rootReducer from './store/rootReducer';
-import initialState from './store/initialState';
+import { initialState } from './store/initialState';
 
 const store = createStore(rootReducer, initialState);
 

@@ -7,7 +7,9 @@ type ReturnType<T extends boolean> = T extends true ? IParsedId : string;
 
 export interface IDom {
   html(html: string | undefined): this | string | undefined;
-  text(text: string): void;
+  text(text: string): Dom;
+  text(text: Dom): string;
+  text(): string;
   clear(): this;
   append(node: Element | Dom): this;
   on(evenType: string, callback: (...arg: any[]) => void): void;
@@ -56,11 +58,15 @@ export class Dom implements IDom {
     return this.$el?.outerHTML.trim();
   }
 
+  // TODO Доработать документацию (включить перегрузку)
   /**
    * Метод добавления строки в содержимое тега
    * @param {string} text строка, которая будет добавляться в элемент
    */
-  text(text?: string | Dom) {
+  text(text: string): Dom;
+  text(text: Dom): string;
+  text(): string;
+  text(text?: unknown): string | Dom | undefined {
     if (typeof text === 'string') {
       if (this.$el) this.$el.textContent = text;
       return this;

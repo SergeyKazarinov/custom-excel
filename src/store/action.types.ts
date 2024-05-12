@@ -3,6 +3,11 @@ export interface ITableResizeActionCreator {
   payload: ITableResize;
 }
 
-export type TTableActions = ITableResizeActionCreator | { type: 'TEST' } | { type: '__INIT__' };
+export interface IChangeTextActionCreator {
+  readonly type: 'CHANGE_TEXT';
+  payload: IChangeTextPayload;
+}
+
+export type TTableActions = ITableResizeActionCreator | IChangeTextActionCreator | { type: '__INIT__' };
 
 export type TActions = TTableActions;

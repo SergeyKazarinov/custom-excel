@@ -5,6 +5,8 @@ import { IRootState } from './store.types';
 export const defaultState: IRootState = {
   colState: {},
   rowState: {},
+  dataState: {},
+  currentText: '',
 };
 
 const localStorageState = localStorageFn<IRootState>(EXCEL_STATE);

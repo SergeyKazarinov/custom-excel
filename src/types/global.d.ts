@@ -9,3 +9,8 @@ interface ITableResize {
   type: TTypeTableResize;
   value: number;
 }
+
+interface IChangeTextPayload {
+  id: string;
+  text: string;
+}
