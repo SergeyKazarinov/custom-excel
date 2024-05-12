@@ -22,7 +22,7 @@ const createStore: TCreateStore<IRootState, TActions> = (rootReducer, initialSta
     },
 
     getState() {
-      return state;
+      return structuredClone<IRootState>(state);
     },
   };
 };

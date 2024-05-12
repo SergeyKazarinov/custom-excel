@@ -1,11 +1,13 @@
 import $ from '@core/dom/dom';
 import { IExcelComponent } from '@src/core/excelComponent/ExcelComponent';
 import Observer from '@src/core/observer/Observer';
-import { IRootState } from '@src/store/store.types';
+import StoreSubscriber from '@src/core/storeSubscriber/StoreSubscriber';
+import { TActions } from '@src/store/action.types';
+import { IReturnCreateStore, IRootState } from '@src/store/store.types';
 
 interface IExcelOptions<T> {
   components: (new (...arg: any[]) => T)[];
-  store: any;
+  store: IReturnCreateStore<IRootState, TActions>;
 }
 
 class Excel<T extends IExcelComponent> {
@@ -17,7 +19,9 @@ class Excel<T extends IExcelComponent> {
 
   private observer: Observer;
 
-  private store: IRootState;
+  private store: IReturnCreateStore<IRootState, TActions>;
+
+  public subscriber: StoreSubscriber;
 
   constructor(selector: string, options: IExcelOptions<T>) {
     this.$el = $(selector);
@@ -25,6 +29,7 @@ class Excel<T extends IExcelComponent> {
     this.objectComponents = [];
     this.observer = new Observer();
     this.store = options.store;
+    this.subscriber = new StoreSubscriber(this.store);
   }
 
   getRoot() {
@@ -53,7 +58,7 @@ class Excel<T extends IExcelComponent> {
 
   render() {
     this.$el?.append(this.getRoot());
-
+    this.subscriber.subscribeComponents(this.objectComponents);
     this.objectComponents.forEach((component) => {
       component.init();
     });
@@ -61,6 +66,7 @@ class Excel<T extends IExcelComponent> {
 
   destroy() {
     this.objectComponents.forEach((component) => component.destroy());
+    this.subscriber.unsubscribeFromStore();
   }
 }
 

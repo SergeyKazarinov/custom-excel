@@ -2,6 +2,7 @@ import $, { Dom } from '@core/dom/dom';
 import ExcelComponent from '@src/core/excelComponent/ExcelComponent';
 import { IComponentOptions } from '@src/types/components';
 import * as actions from '@src/store/actions';
+import { IRootState } from '@src/store/store.types';
 
 interface IDivClickEvent extends MouseEvent {
   target: HTMLDivElement;
@@ -11,6 +12,7 @@ export interface IFormula {
   toHTML(): string;
   onInput(event: IDivClickEvent): void;
   onKeydown(event: KeyboardEvent): void;
+  changeStore(changes: Partial<IRootState>): void;
 }
 
 class Formula extends ExcelComponent implements IFormula {
@@ -22,6 +24,7 @@ class Formula extends ExcelComponent implements IFormula {
     super($root, {
       name: 'Formula',
       listeners: ['input', 'keydown'],
+      subscribe: ['currentText'],
       ...options,
     });
 
@@ -37,12 +40,6 @@ class Formula extends ExcelComponent implements IFormula {
         this.$dispatch(actions.changeTextActionCreator({ text: $cell.text(), id }));
       }
       this.$formula?.text($cell.text());
-    });
-    // this.$subscribe('table:input', ($cell: Dom) => {
-    //   this.$formula?.text($cell.text());
-    // });
-    this.$subscribeStore((state) => {
-      this.$formula?.text(state.currentText);
     });
   }
 
@@ -67,6 +64,10 @@ class Formula extends ExcelComponent implements IFormula {
 
       this.$trigger('formula:done');
     }
+  }
+
+  changeStore(changes: Partial<IRootState>): void {
+    this.$formula?.text(changes.currentText || '');
   }
 }
 

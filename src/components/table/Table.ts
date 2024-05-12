@@ -68,10 +68,6 @@ class Table extends ExcelComponent implements ITable {
     this.$subscribe('formula:done', () => {
       this.selection.currentCell?.focus();
     });
-
-    this.$subscribeStore((state) => {
-      console.info(`Table`, state);
-    });
   }
 
   onMousedown(event: MouseEvent) {
@@ -121,7 +117,6 @@ class Table extends ExcelComponent implements ITable {
   }
 
   onInput(event: IInputEvent) {
-    // this.$trigger('table:input', $(event.target));
     this.updateCurrentTextInStore($(event.target).text());
   }
 }
