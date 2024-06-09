@@ -1,10 +1,12 @@
-import ExcelComponent from '@src/core/excelComponent/ExcelComponent';
-import { Dom } from '@src/core/dom/dom';
+import $, { Dom } from '@src/core/dom/dom';
+import ExcelStateComponent from '@src/core/excelStateComponent/ExcelStateComponent';
 import { IComponentOptions } from '@src/types/components';
+import { IToolbarState } from '@src/types/state';
+import createToolbar from './toolbar.template';
 
 export interface IToolbar {}
 
-class Toolbar extends ExcelComponent implements IToolbar {
+class Toolbar extends ExcelStateComponent<IToolbarState> implements IToolbar {
   static className = 'excel__toolbar toolbar';
 
   constructor($root: Dom, options: IComponentOptions) {
@@ -15,33 +17,34 @@ class Toolbar extends ExcelComponent implements IToolbar {
     });
   }
 
-  onClick(event: Event) {
-    console.info(event.target);
+  prepare(): void {
+    const initialState: IToolbarState = {
+      textAlign: 'left',
+      fontWeight: 'normal',
+      textDecoration: 'none',
+      fontStyle: 'normal',
+    };
+
+    this.initState(initialState);
   }
 
-  toHTML(): string {
-    return `
-      <div class="excel__toolbar toolbar">
-        <button class="toolbar__button">
-          <span class="material-icons"> format_align_left </span>
-        </button>
-        <button class="toolbar__button">
-          <span class="material-icons"> format_align_center </span>
-        </button>
-        <button class="toolbar__button">
-          <span class="material-icons"> format_align_right </span>
-        </button>
-        <button class="toolbar__button">
-          <span class="material-icons"> format_bold </span>
-        </button>
-        <button class="toolbar__button">
-          <span class="material-icons"> format_italic </span>
-        </button>
-        <button class="toolbar__button">
-          <span class="material-icons"> format_underline </span>
-        </button>
-      </div>
-    `;
+  get template() {
+    return createToolbar(this.state);
+  }
+
+  onClick(event: Event) {
+    if (event.target instanceof Element) {
+      const $target = $(event.target);
+      if ($target.data?.type === 'button') {
+        const style = JSON.parse($target.data.style ?? '{}');
+        const key = Object.keys(style)[0];
+        this.setState({ [key]: style[key] });
+      }
+    }
+  }
+
+  toHTML() {
+    return this.template;
   }
 }
 
