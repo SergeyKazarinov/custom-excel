@@ -1,4 +1,5 @@
 import $, { Dom } from '@src/core/dom/dom';
+import { ITableResize } from '@src/types/global';
 
 /**
  * Функция изменения ширины столбцов или высоты строк

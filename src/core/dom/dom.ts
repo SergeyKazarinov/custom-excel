@@ -1,3 +1,6 @@
+import { TCSSStyles } from '@src/types/general';
+import { IToolbarState } from '@src/types/state';
+
 export interface IParsedId {
   row: number;
   col: number;
@@ -26,9 +29,9 @@ export interface IDom {
 }
 
 export class Dom implements IDom {
-  public $el: Element | null;
+  public $el: HTMLElement | null;
 
-  constructor(selector: string | Element) {
+  constructor(selector: string | HTMLElement) {
     this.$el = typeof selector === 'string' ? document.querySelector(selector) : selector;
   }
 
@@ -129,7 +132,7 @@ export class Dom implements IDom {
   closest(selector: string) {
     const nodeElement = this.$el?.closest(selector);
 
-    if (nodeElement) {
+    if (nodeElement && nodeElement instanceof HTMLElement) {
       // eslint-disable-next-line
       return $(nodeElement);
     }
@@ -171,7 +174,7 @@ export class Dom implements IDom {
   find(selector: string) {
     const element = this.$el?.querySelector(selector);
 
-    if (element) {
+    if (element && element instanceof HTMLElement) {
       // eslint-disable-next-line
       return $(element);
     }
@@ -197,12 +200,21 @@ export class Dom implements IDom {
    * Метод установки инлайновых стилей на элемент
    * @param {object} styles - объект типа {css свойство: значение}
    */
-  css(styles: Partial<Record<keyof CSSStyleDeclaration, string | number>>) {
+  css(styles: TCSSStyles) {
     Object.entries(styles).forEach(([key, value]) => {
       if (this.$el instanceof HTMLElement) {
         this.$el.style[key as any] = String(value);
       }
     });
+  }
+
+  getStyles(styles: Array<keyof IToolbarState>): Partial<CSSStyleDeclaration> {
+    console.info(this.$el);
+    return styles.reduce((acc: Partial<CSSStyleDeclaration>, styleProp) => {
+      // @ts-ignore
+      acc[styleProp] = this.$el?.style[styleProp];
+      return acc;
+    }, {});
   }
 
   /**
@@ -224,7 +236,7 @@ export class Dom implements IDom {
   }
 }
 
-const $ = (selector: string | Element) => new Dom(selector);
+const $ = (selector: string | HTMLElement) => new Dom(selector);
 
 $.create = (tagName: string, classes: string = '') => {
   const el = document.createElement(tagName);

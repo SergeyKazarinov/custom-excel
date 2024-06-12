@@ -2,6 +2,8 @@ import { CHART_CODES } from '@src/consts/codes';
 import { DEFAULT_HEIGHT, DEFAULT_WIDTH } from '@src/consts/table';
 import toChar from '@src/helpers/toChar';
 import { IRootState } from '@src/store/store.types';
+import { initialToolbarState } from '@src/consts/consts';
+import { IToolbarState } from '@src/types/state';
 import { ICreateCol, ICreateTable } from './table.types';
 
 /**
@@ -22,6 +24,8 @@ const getWidth = (colState: Record<string, number>, index: number) => `${colStat
  */
 const getHeight = (rowState: Record<string, number>, index: number) => `${rowState[index] || DEFAULT_HEIGHT}px`;
 
+const camelToDashCase = (str: string) => str.replace(/([A-Z])/g, (g) => `-${g[0].toLowerCase()}`);
+
 const withWidthFrom =
   (state: IRootState) =>
   (colName: string, index: number): ICreateCol => ({
@@ -38,10 +42,13 @@ const createCell = (rowNumber: number, state: IRootState) => (_: unknown, colNum
   const width = getWidth(state.colState, colNumber);
   const cellId = `${rowNumber}:${colNumber + 1}`;
   const data = state.dataState[cellId];
+  const styles = Object.keys(initialToolbarState)
+    .map((key) => `${camelToDashCase(key)}: ${initialToolbarState[key as keyof IToolbarState]}`)
+    .join('; ');
   return /* html */ `
     <div
       class="table__cell"
-      style="width: ${width}"
+      style="${styles}; width: ${width}"
       data-type="cell"
       data-col=${colNumber}
       data-id=${cellId}

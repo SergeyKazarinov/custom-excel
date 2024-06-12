@@ -1,3 +1,5 @@
+import { IToolbarState } from '@src/types/state';
+
 type TRootReducer<S, A> = (state: S, action: A) => S;
 
 export interface IReturnCreateStore<S, A> {
@@ -13,4 +15,5 @@ export interface IRootState {
   rowState: Record<string, number>;
   dataState: Record<string, string>;
   currentText: string;
+  currentStyles: IToolbarState;
 }

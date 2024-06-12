@@ -1,3 +1,5 @@
+import { IToolbarState } from './state';
+
 interface Window {
   [key: string]: any;
 }
@@ -13,4 +15,8 @@ interface ITableResize {
 interface IChangeTextPayload {
   id: string;
   text: string;
+}
+interface IChangeCurrentStylesPayload {
+  id: string;
+  data: IToolbarState;
 }

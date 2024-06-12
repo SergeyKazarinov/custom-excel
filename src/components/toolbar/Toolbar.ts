@@ -2,6 +2,8 @@ import $, { Dom } from '@src/core/dom/dom';
 import ExcelStateComponent from '@src/core/excelStateComponent/ExcelStateComponent';
 import { IComponentOptions } from '@src/types/components';
 import { IToolbarState } from '@src/types/state';
+import { initialToolbarState } from '@src/consts/consts';
+import { IRootState } from '@src/store/store.types';
 import createToolbar from './toolbar.template';
 
 export interface IToolbar {}
@@ -13,19 +15,13 @@ class Toolbar extends ExcelStateComponent<IToolbarState> implements IToolbar {
     super($root, {
       name: 'Toolbar',
       listeners: ['click'],
+      subscribe: ['currentStyles'],
       ...options,
     });
   }
 
   prepare(): void {
-    const initialState: IToolbarState = {
-      textAlign: 'left',
-      fontWeight: 'normal',
-      textDecoration: 'none',
-      fontStyle: 'normal',
-    };
-
-    this.initState(initialState);
+    this.initState(initialToolbarState);
   }
 
   get template() {
@@ -33,18 +29,21 @@ class Toolbar extends ExcelStateComponent<IToolbarState> implements IToolbar {
   }
 
   onClick(event: Event) {
-    if (event.target instanceof Element) {
+    if (event.target instanceof HTMLElement) {
       const $target = $(event.target);
       if ($target.data?.type === 'button') {
-        const style = JSON.parse($target.data.style ?? '{}');
-        const key = Object.keys(style)[0];
-        this.setState({ [key]: style[key] });
+        const style: IToolbarState = JSON.parse($target.data.style!);
+        this.$trigger('toolbar:applyStyle', style);
       }
     }
   }
 
   toHTML() {
     return this.template;
+  }
+
+  changeStore(changes: IRootState) {
+    this.setState(changes.currentStyles);
   }
 }
 

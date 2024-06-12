@@ -3,7 +3,7 @@ import { TCallback } from '@src/types/components';
 import { TActions } from './action.types';
 
 const createStore: TCreateStore<IRootState, TActions> = (rootReducer, initialState) => {
-  let state = rootReducer({ ...initialState }, { type: '__INIT__' });
+  let state = rootReducer({ ...initialState }, { type: '__INIT__', payload: '' });
   let listeners: TCallback[] = [];
 
   return {
