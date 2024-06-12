@@ -75,6 +75,12 @@ class Table extends ExcelComponent implements ITable {
 
     this.$subscribe('toolbar:applyStyle', (style: IToolbarState) => {
       this.selection.applyStyle(style);
+      this.$dispatch(
+        actions.applyStyles({
+          ids: this.selection.selectedIds,
+          value: style,
+        })
+      );
     });
   }
 

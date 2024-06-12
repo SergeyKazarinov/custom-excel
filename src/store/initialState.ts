@@ -7,6 +7,7 @@ export const defaultState: IRootState = {
   colState: {},
   rowState: {},
   dataState: {},
+  stylesState: {},
   currentText: '',
   currentStyles: initialToolbarState,
 };

@@ -1,4 +1,4 @@
-import { ITableResize, IChangeTextPayload } from '@src/types/global';
+import { ITableResize, IChangeTextPayload, IApplyStylePayload } from '@src/types/global';
 import { IToolbarState } from '@src/types/state';
 
 export interface ITableResizeActionCreator {
@@ -12,7 +12,7 @@ export interface IChangeTextActionCreator {
 }
 export interface IApplyStyle {
   readonly type: 'APPLY_STYLE';
-  payload: IToolbarState;
+  payload: IApplyStylePayload;
 }
 export interface ICurrentStyles {
   readonly type: 'CURRENT_STYLES';

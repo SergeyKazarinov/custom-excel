@@ -20,6 +20,10 @@ class TableSelection implements ITableSelection {
     this.currentCell = null;
   }
 
+  get selectedIds() {
+    return this.group.map(($el) => $el.getId<false>());
+  }
+
   clear() {
     this.group.forEach(($cell) => {
       $cell.removeClass(TableSelection.selectedClassName);

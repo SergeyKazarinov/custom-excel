@@ -20,3 +20,7 @@ interface IChangeCurrentStylesPayload {
   id: string;
   data: IToolbarState;
 }
+interface IApplyStylePayload {
+  ids: (string | undefined)[];
+  value: IToolbarState;
+}

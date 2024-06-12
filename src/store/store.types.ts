@@ -13,6 +13,7 @@ export type TCreateStore<S, A> = (rootReducer: TRootReducer<S, A>, initialState:
 export interface IRootState {
   colState: Record<string, number>;
   rowState: Record<string, number>;
+  stylesState: Record<string, IToolbarState>;
   dataState: Record<string, string>;
   currentText: string;
   currentStyles: IToolbarState;

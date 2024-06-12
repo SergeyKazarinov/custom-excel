@@ -209,7 +209,6 @@ export class Dom implements IDom {
   }
 
   getStyles(styles: Array<keyof IToolbarState>): Partial<CSSStyleDeclaration> {
-    console.info(this.$el);
     return styles.reduce((acc: Partial<CSSStyleDeclaration>, styleProp) => {
       // @ts-ignore
       acc[styleProp] = this.$el?.style[styleProp];
