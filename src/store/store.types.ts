@@ -17,4 +17,5 @@ export interface IRootState {
   dataState: Record<string, string>;
   currentText: string;
   currentStyles: IToolbarState;
+  title: string;
 }

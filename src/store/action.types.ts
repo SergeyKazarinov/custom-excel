@@ -1,4 +1,4 @@
-import { ITableResize, IChangeTextPayload, IApplyStylePayload } from '@src/types/global';
+import { IApplyStylePayload, IChangeTextPayload, ITableResize } from '@src/types/global';
 import { IToolbarState } from '@src/types/state';
 
 export interface ITableResizeActionCreator {
@@ -18,12 +18,17 @@ export interface ICurrentStyles {
   readonly type: 'CURRENT_STYLES';
   payload: IToolbarState;
 }
+export interface IChangeTitle {
+  readonly type: 'CHANGE_TITLE';
+  payload: string;
+}
 
 export type TTableActions =
   | ITableResizeActionCreator
   | IChangeTextActionCreator
   | IApplyStyle
   | ICurrentStyles
+  | IChangeTitle
   | { type: '__INIT__'; payload: any };
 
 export type TActions = TTableActions;

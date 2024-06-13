@@ -5,6 +5,7 @@ import { IComponentOptions } from '@src/types/components';
 import * as actions from '@src/store/actions';
 import { IToolbarState } from '@src/types/state';
 import { initialToolbarState } from '@src/consts/consts';
+import { IInputEvent } from '@src/types/general';
 import handleMatrix from './helpers/handleMatrix';
 import handleResize from './helpers/handleResize';
 import isCell from './helpers/isCell';
@@ -12,9 +13,6 @@ import nextSelector from './helpers/nextSelector';
 import createTable from './table.template';
 import TableSelection from './TableSelection';
 
-interface IInputEvent extends InputEvent {
-  target: HTMLInputElement;
-}
 export interface ITable {
   onMousedown: (event: MouseEvent) => void;
   onKeydown: (event: KeyboardEvent) => void;

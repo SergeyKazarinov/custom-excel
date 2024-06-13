@@ -2,6 +2,7 @@ import { CHART_CODES } from '@src/consts/codes';
 import { DEFAULT_HEIGHT, DEFAULT_WIDTH } from '@src/consts/table';
 import toChar from '@src/helpers/toChar';
 import { IRootState } from '@src/store/store.types';
+import { initialToolbarState } from '@src/consts/consts';
 import { ICreateCol, ICreateTable } from './table.types';
 import toInlineStyles from '../../helpers/toInlineStyles';
 
@@ -39,7 +40,7 @@ const createCell = (rowNumber: number, state: IRootState) => (_: unknown, colNum
   const width = getWidth(state.colState, colNumber);
   const cellId = `${rowNumber}:${colNumber + 1}`;
   const data = state.dataState[cellId];
-  const styles = toInlineStyles(state.stylesState[cellId] || {});
+  const styles = toInlineStyles({ ...initialToolbarState, ...state.stylesState[cellId] });
 
   return /* html */ `
     <div

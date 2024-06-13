@@ -3,10 +3,8 @@ import ExcelComponent from '@src/core/excelComponent/ExcelComponent';
 import { IComponentOptions } from '@src/types/components';
 import * as actions from '@src/store/actions';
 import { IRootState } from '@src/store/store.types';
+import { IDivClickEvent } from '@src/types/general';
 
-interface IDivClickEvent extends MouseEvent {
-  target: HTMLDivElement;
-}
 export interface IFormula {
   init(): void;
   toHTML(): string;

@@ -1,6 +1,9 @@
-import { Dom } from '@src/core/dom/dom';
+import { defaultTitle } from '@src/consts/consts';
+import $, { Dom } from '@src/core/dom/dom';
 import ExcelComponent from '@src/core/excelComponent/ExcelComponent';
+import { changeTitle } from '@src/store/actions';
 import { IComponentOptions } from '@src/types/components';
+import { IInputEvent } from '@src/types/general';
 
 interface IHeader {}
 
@@ -10,14 +13,16 @@ class Header extends ExcelComponent implements IHeader {
   constructor($root: Dom, options: IComponentOptions) {
     super($root, {
       name: 'Header',
+      listeners: ['input'],
       ...options,
     });
   }
 
   toHTML(): string {
+    const { title = defaultTitle } = this.store.getState();
     return `
     <header class="excel__header header">
-      <input class="header__input" value="Новая таблица" />
+      <input type="text" class="header__input" value="${title}" spellcheck/>
 
       <div>
         <button class="header__button">
@@ -29,6 +34,11 @@ class Header extends ExcelComponent implements IHeader {
       </div>
     </header>
     `;
+  }
+
+  onInput(event: IInputEvent) {
+    const $target = $(event.target);
+    this.$dispatch(changeTitle($target.text()));
   }
 }
 

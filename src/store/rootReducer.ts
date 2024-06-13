@@ -44,6 +44,9 @@ const rootReducer = (state: IRootState, action: TActions): IRootState => {
       });
       return { ...state, [field]: val, currentStyles: { ...state.currentStyles, ...action.payload.value } };
 
+    case 'CHANGE_TITLE':
+      return { ...state, title: action.payload };
+
     default:
       return state;
   }

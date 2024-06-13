@@ -1,6 +1,12 @@
 import { IToolbarState } from '@src/types/state';
 import { ITableResize, IChangeTextPayload, IApplyStylePayload } from '@src/types/global';
-import { IApplyStyle, IChangeTextActionCreator, ICurrentStyles, ITableResizeActionCreator } from './action.types';
+import {
+  IApplyStyle,
+  IChangeTextActionCreator,
+  IChangeTitle,
+  ICurrentStyles,
+  ITableResizeActionCreator,
+} from './action.types';
 
 export const tableResizeActionCreator = (data: ITableResize): ITableResizeActionCreator => ({
   type: 'TABLE_RESIZE',
@@ -19,5 +25,10 @@ export const getCurrentStyles = (data: IToolbarState): ICurrentStyles => ({
 
 export const applyStyles = (data: IApplyStylePayload): IApplyStyle => ({
   type: 'APPLY_STYLE',
+  payload: data,
+});
+
+export const changeTitle = (data: string): IChangeTitle => ({
+  type: 'CHANGE_TITLE',
   payload: data,
 });
