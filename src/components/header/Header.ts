@@ -1,6 +1,7 @@
 import { defaultTitle } from '@src/consts/consts';
 import $, { Dom } from '@src/core/dom/dom';
 import ExcelComponent from '@src/core/excelComponent/ExcelComponent';
+import debounce from '@src/helpers/debounce';
 import { changeTitle } from '@src/store/actions';
 import { IComponentOptions } from '@src/types/components';
 import { IInputEvent } from '@src/types/general';
@@ -16,6 +17,10 @@ class Header extends ExcelComponent implements IHeader {
       listeners: ['input'],
       ...options,
     });
+  }
+
+  prepare(): void {
+    this.onInput = debounce(this.onInput.bind(this), 500);
   }
 
   toHTML(): string {
