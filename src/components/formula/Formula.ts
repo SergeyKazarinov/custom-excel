@@ -34,10 +34,14 @@ class Formula extends ExcelComponent implements IFormula {
     this.$formula = this.$root.find('#formula');
     this.$subscribe('table:select', ($cell: Dom) => {
       const id = $cell.getId<false>();
+      const dataValue = $cell.attr('data-value');
+      console.log('dataValue', dataValue);
       if (id) {
         this.$dispatch(actions.changeTextActionCreator({ text: $cell.text(), id }));
       }
-      this.$formula?.text($cell.text());
+      if (dataValue) {
+        this.$formula?.text(dataValue);
+      }
     });
   }
 

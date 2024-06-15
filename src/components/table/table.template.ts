@@ -5,6 +5,7 @@ import { IRootState } from '@src/store/store.types';
 import { initialToolbarState } from '@src/consts/consts';
 import { ICreateCol, ICreateTable } from './table.types';
 import toInlineStyles from '../../helpers/toInlineStyles';
+import parseString from '../../helpers/parseString';
 
 /**
  * Создает значение ширины столбца
@@ -41,16 +42,17 @@ const createCell = (rowNumber: number, state: IRootState) => (_: unknown, colNum
   const cellId = `${rowNumber}:${colNumber + 1}`;
   const data = state.dataState[cellId];
   const styles = toInlineStyles({ ...initialToolbarState, ...state.stylesState[cellId] });
-
+  const datValue = data || '';
   return /* html */ `
     <div
       class="table__cell"
       style="${styles}; width: ${width}"
       data-type="cell"
-      data-col=${colNumber}
-      data-id=${cellId}
+      data-col="${colNumber}"
+      data-value="${datValue}"
+      data-id="${cellId}"
       contenteditable
-    >${data || ''}</div>
+    >${parseString(data) || ''}</div>
     `;
 };
 

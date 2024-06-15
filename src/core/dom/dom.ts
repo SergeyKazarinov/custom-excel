@@ -26,6 +26,8 @@ export interface IDom {
   addClass(className: string): this;
   removeClass(className: string): this;
   getId<T extends boolean>(parsed?: T): ReturnType<T> | undefined;
+  attr(name: string, value: string): this;
+  attr(name: string): string | undefined | null;
 }
 
 export class Dom implements IDom {
@@ -70,8 +72,8 @@ export class Dom implements IDom {
   text(text: Dom): string;
   text(): string;
   text(text?: unknown): string | Dom | undefined {
-    if (typeof text === 'string') {
-      if (this.$el) this.$el.textContent = text;
+    if (typeof text !== 'undefined') {
+      if (this.$el) this.$el.textContent = String(text);
       return this;
     }
 
@@ -232,6 +234,22 @@ export class Dom implements IDom {
   removeClass(className: string) {
     this.$el?.classList.remove(className);
     return this;
+  }
+
+  attr(name: string, value: string): this;
+  attr(name: string): string | undefined | null;
+  attr(name: string, value?: string): string | this | undefined | null {
+    console.log('value', value);
+    if (value) {
+      console.log('name', name);
+      this.$el?.setAttribute(name, value);
+      return this;
+    }
+    if (this.$el?.hasAttribute(name)) {
+      const att = this.$el?.getAttribute(name);
+      return att;
+    }
+    return '';
   }
 }
 

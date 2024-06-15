@@ -6,6 +6,7 @@ import * as actions from '@src/store/actions';
 import { IToolbarState } from '@src/types/state';
 import { initialToolbarState } from '@src/consts/consts';
 import { IInputEvent } from '@src/types/general';
+import parseString from '@src/helpers/parseString';
 import handleMatrix from './helpers/handleMatrix';
 import handleResize from './helpers/handleResize';
 import isCell from './helpers/isCell';
@@ -62,9 +63,9 @@ class Table extends ExcelComponent implements ITable {
       this.selectCell($cell);
     }
 
-    this.$subscribe('formula:input', (text) => {
-      this.selection.currentCell?.text(text);
-      this.updateCurrentTextInStore(text);
+    this.$subscribe('formula:input', (value: string) => {
+      this.selection.currentCell?.attr('data-value', value).text(parseString(value));
+      this.updateCurrentTextInStore(value);
     });
 
     this.$subscribe('formula:done', () => {
