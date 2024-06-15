@@ -1,15 +1,16 @@
 import $, { Dom } from '@core/dom/dom';
 import ExcelComponent from '@src/core/excelComponent/ExcelComponent';
 import { IComponentOptions } from '@src/types/components';
+import * as actions from '@src/store/actions';
+import { IRootState } from '@src/store/store.types';
+import { IDivClickEvent } from '@src/types/general';
 
-interface IDivClickEvent extends MouseEvent {
-  target: HTMLDivElement;
-}
 export interface IFormula {
   init(): void;
   toHTML(): string;
   onInput(event: IDivClickEvent): void;
   onKeydown(event: KeyboardEvent): void;
+  changeStore(changes: Partial<IRootState>): void;
 }
 
 class Formula extends ExcelComponent implements IFormula {
@@ -21,6 +22,7 @@ class Formula extends ExcelComponent implements IFormula {
     super($root, {
       name: 'Formula',
       listeners: ['input', 'keydown'],
+      subscribe: ['currentText'],
       ...options,
     });
 
@@ -31,10 +33,15 @@ class Formula extends ExcelComponent implements IFormula {
     super.init();
     this.$formula = this.$root.find('#formula');
     this.$subscribe('table:select', ($cell: Dom) => {
-      this.$formula?.text($cell.text());
-    });
-    this.$subscribe('table:input', ($cell: Dom) => {
-      this.$formula?.text($cell.text());
+      const id = $cell.getId<false>();
+      const dataValue = $cell.attr('data-value');
+      console.log('dataValue', dataValue);
+      if (id) {
+        this.$dispatch(actions.changeTextActionCreator({ text: $cell.text(), id }));
+      }
+      if (dataValue) {
+        this.$formula?.text(dataValue);
+      }
     });
   }
 
@@ -59,6 +66,10 @@ class Formula extends ExcelComponent implements IFormula {
 
       this.$trigger('formula:done');
     }
+  }
+
+  changeStore(changes: Partial<IRootState>): void {
+    this.$formula?.text(changes.currentText || '');
   }
 }
 

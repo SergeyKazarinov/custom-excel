@@ -2,6 +2,11 @@ import { KEYBOARDS } from '@src/consts/codes';
 import $, { Dom } from '@src/core/dom/dom';
 import ExcelComponent from '@src/core/excelComponent/ExcelComponent';
 import { IComponentOptions } from '@src/types/components';
+import * as actions from '@src/store/actions';
+import { IToolbarState } from '@src/types/state';
+import { initialToolbarState } from '@src/consts/consts';
+import { IInputEvent } from '@src/types/general';
+import parseString from '@src/helpers/parseString';
 import handleMatrix from './helpers/handleMatrix';
 import handleResize from './helpers/handleResize';
 import isCell from './helpers/isCell';
@@ -9,14 +14,12 @@ import nextSelector from './helpers/nextSelector';
 import createTable from './table.template';
 import TableSelection from './TableSelection';
 
-interface IInputEvent extends InputEvent {
-  target: HTMLInputElement;
-}
 export interface ITable {
   onMousedown: (event: MouseEvent) => void;
   onKeydown: (event: KeyboardEvent) => void;
   onInput(event: IInputEvent): void;
   selectCell($cell: Dom): void;
+  resizeTable(event: MouseEvent): Promise<void>;
 }
 
 class Table extends ExcelComponent implements ITable {
@@ -33,12 +36,24 @@ class Table extends ExcelComponent implements ITable {
   }
 
   toHTML(): string {
-    return createTable();
+    const state = this.store.getState();
+    return createTable({ state });
   }
 
   selectCell($cell: Dom): void {
     this.selection.select($cell);
     this.$trigger('table:select', $cell);
+    const styles = $cell.getStyles(Object.keys(initialToolbarState) as Array<keyof IToolbarState>);
+    this.$dispatch(actions.getCurrentStyles(styles as IToolbarState));
+  }
+
+  async resizeTable(event: MouseEvent): Promise<void> {
+    try {
+      const data = await handleResize(event, this.$root);
+      this.$dispatch(actions.tableResizeActionCreator(data));
+    } catch (e) {
+      console.error(e);
+    }
   }
 
   init() {
@@ -48,19 +63,30 @@ class Table extends ExcelComponent implements ITable {
       this.selectCell($cell);
     }
 
-    this.$subscribe('formula:input', (text) => {
-      this.selection.currentCell?.text(text);
+    this.$subscribe('formula:input', (value: string) => {
+      this.selection.currentCell?.attr('data-value', value).text(parseString(value));
+      this.updateCurrentTextInStore(value);
     });
 
     this.$subscribe('formula:done', () => {
       this.selection.currentCell?.focus();
     });
+
+    this.$subscribe('toolbar:applyStyle', (style: IToolbarState) => {
+      this.selection.applyStyle(style);
+      this.$dispatch(
+        actions.applyStyles({
+          ids: this.selection.selectedIds,
+          value: style,
+        })
+      );
+    });
   }
 
   onMousedown(event: MouseEvent) {
-    handleResize(event, this.$root);
+    this.resizeTable(event);
 
-    if (isCell(event) && event.target instanceof Element) {
+    if (isCell(event) && event.target instanceof HTMLElement) {
       const $target = $(event.target);
 
       if (event.shiftKey) {
@@ -70,7 +96,7 @@ class Table extends ExcelComponent implements ITable {
 
         this.selection.selectGroup($cells);
       } else {
-        this.selection.select($target);
+        this.selectCell($target);
       }
     }
   }
@@ -91,8 +117,20 @@ class Table extends ExcelComponent implements ITable {
     }
   }
 
+  updateCurrentTextInStore(text: string) {
+    const id = this.selection.currentCell?.getId<false>();
+    if (id) {
+      this.$dispatch(
+        actions.changeTextActionCreator({
+          id,
+          text,
+        })
+      );
+    }
+  }
+
   onInput(event: IInputEvent) {
-    this.$trigger('table:input', $(event.target));
+    this.updateCurrentTextInStore($(event.target).text());
   }
 }
 

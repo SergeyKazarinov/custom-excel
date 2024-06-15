@@ -1,3 +1,6 @@
+import { TCSSStyles } from '@src/types/general';
+import { IToolbarState } from '@src/types/state';
+
 export interface IParsedId {
   row: number;
   col: number;
@@ -7,7 +10,9 @@ type ReturnType<T extends boolean> = T extends true ? IParsedId : string;
 
 export interface IDom {
   html(html: string | undefined): this | string | undefined;
-  text(text: string): void;
+  text(text: string): Dom;
+  text(text: Dom): string;
+  text(): string;
   clear(): this;
   append(node: Element | Dom): this;
   on(evenType: string, callback: (...arg: any[]) => void): void;
@@ -21,12 +26,14 @@ export interface IDom {
   addClass(className: string): this;
   removeClass(className: string): this;
   getId<T extends boolean>(parsed?: T): ReturnType<T> | undefined;
+  attr(name: string, value: string): this;
+  attr(name: string): string | undefined | null;
 }
 
 export class Dom implements IDom {
-  public $el: Element | null;
+  public $el: HTMLElement | null;
 
-  constructor(selector: string | Element) {
+  constructor(selector: string | HTMLElement) {
     this.$el = typeof selector === 'string' ? document.querySelector(selector) : selector;
   }
 
@@ -56,13 +63,17 @@ export class Dom implements IDom {
     return this.$el?.outerHTML.trim();
   }
 
+  // TODO Доработать документацию (включить перегрузку)
   /**
    * Метод добавления строки в содержимое тега
    * @param {string} text строка, которая будет добавляться в элемент
    */
-  text(text?: string | Dom) {
-    if (typeof text === 'string') {
-      if (this.$el) this.$el.textContent = text;
+  text(text: string): Dom;
+  text(text: Dom): string;
+  text(): string;
+  text(text?: unknown): string | Dom | undefined {
+    if (typeof text !== 'undefined') {
+      if (this.$el) this.$el.textContent = String(text);
       return this;
     }
 
@@ -123,7 +134,7 @@ export class Dom implements IDom {
   closest(selector: string) {
     const nodeElement = this.$el?.closest(selector);
 
-    if (nodeElement) {
+    if (nodeElement && nodeElement instanceof HTMLElement) {
       // eslint-disable-next-line
       return $(nodeElement);
     }
@@ -165,7 +176,7 @@ export class Dom implements IDom {
   find(selector: string) {
     const element = this.$el?.querySelector(selector);
 
-    if (element) {
+    if (element && element instanceof HTMLElement) {
       // eslint-disable-next-line
       return $(element);
     }
@@ -191,12 +202,20 @@ export class Dom implements IDom {
    * Метод установки инлайновых стилей на элемент
    * @param {object} styles - объект типа {css свойство: значение}
    */
-  css(styles: Partial<Record<keyof CSSStyleDeclaration, string | number>>) {
+  css(styles: TCSSStyles) {
     Object.entries(styles).forEach(([key, value]) => {
       if (this.$el instanceof HTMLElement) {
         this.$el.style[key as any] = String(value);
       }
     });
+  }
+
+  getStyles(styles: Array<keyof IToolbarState>): Partial<CSSStyleDeclaration> {
+    return styles.reduce((acc: Partial<CSSStyleDeclaration>, styleProp) => {
+      // @ts-ignore
+      acc[styleProp] = this.$el?.style[styleProp];
+      return acc;
+    }, {});
   }
 
   /**
@@ -216,9 +235,25 @@ export class Dom implements IDom {
     this.$el?.classList.remove(className);
     return this;
   }
+
+  attr(name: string, value: string): this;
+  attr(name: string): string | undefined | null;
+  attr(name: string, value?: string): string | this | undefined | null {
+    console.log('value', value);
+    if (value) {
+      console.log('name', name);
+      this.$el?.setAttribute(name, value);
+      return this;
+    }
+    if (this.$el?.hasAttribute(name)) {
+      const att = this.$el?.getAttribute(name);
+      return att;
+    }
+    return '';
+  }
 }
 
-const $ = (selector: string | Element) => new Dom(selector);
+const $ = (selector: string | HTMLElement) => new Dom(selector);
 
 $.create = (tagName: string, classes: string = '') => {
   const el = document.createElement(tagName);

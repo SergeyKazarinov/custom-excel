@@ -1,9 +1,11 @@
 import { Dom } from '@src/core/dom/dom';
+import { TCSSStyles } from '@src/types/general';
 
 interface ITableSelection {
   clear(): void;
   select($el: Dom): void;
   selectGroup($group: Dom[]): void;
+  applyStyle(style: TCSSStyles): void;
 }
 
 class TableSelection implements ITableSelection {
@@ -16,6 +18,10 @@ class TableSelection implements ITableSelection {
   constructor() {
     this.group = [];
     this.currentCell = null;
+  }
+
+  get selectedIds() {
+    return this.group.map(($el) => $el.getId<false>());
   }
 
   clear() {
@@ -38,6 +44,10 @@ class TableSelection implements ITableSelection {
 
     this.group = $group;
     this.group.forEach(($el) => $el.addClass(TableSelection.selectedClassName));
+  }
+
+  applyStyle(style: TCSSStyles): void {
+    this.group.forEach((element) => element.css(style));
   }
 }
 
