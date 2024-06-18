@@ -1,5 +1,11 @@
+import DashboardPage from '@src/pages/DashboardPage';
+import ExcelPage from '@src/pages/ExcelPage';
 import $, { Dom } from '../dom/dom';
-import ActiveRoute from './ActiveRoute';
+
+interface IRoutesParams {
+  dashboard: new (...arg: any[]) => DashboardPage;
+  excel: new (...arg: any[]) => ExcelPage;
+}
 
 interface IRouter {
   /**
@@ -18,9 +24,9 @@ interface IRouter {
 class Router implements IRouter {
   private $placeholder: Dom;
 
-  private routes: any;
+  private routes: IRoutesParams;
 
-  constructor(selector: string, routes: any) {
+  constructor(selector: string, routes: IRoutesParams) {
     if (!selector) {
       throw new Error('Selector is not provided in Router');
     }
@@ -39,9 +45,11 @@ class Router implements IRouter {
   }
 
   changePageHandler() {
-    console.info(ActiveRoute.path);
+    const Page = this.routes.excel;
 
-    this.$placeholder.html(`<h1>${ActiveRoute.path}</h1>`);
+    const page = new Page();
+    this.$placeholder.append(page.getRoot());
+    page.afterRender();
   }
 
   destroy() {

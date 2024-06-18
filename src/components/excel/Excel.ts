@@ -11,8 +11,6 @@ interface IExcelOptions<T> {
 }
 
 class Excel<T extends IExcelComponent> {
-  public $el;
-
   public components: (new (...arg: any[]) => T)[];
 
   public objectComponents: T[];
@@ -23,8 +21,7 @@ class Excel<T extends IExcelComponent> {
 
   public subscriber: StoreSubscriber;
 
-  constructor(selector: string, options: IExcelOptions<T>) {
-    this.$el = $(selector);
+  constructor(options: IExcelOptions<T>) {
     this.components = options.components || [];
     this.objectComponents = [];
     this.observer = new Observer();
@@ -51,8 +48,7 @@ class Excel<T extends IExcelComponent> {
     return $root;
   }
 
-  render() {
-    this.$el?.append(this.getRoot());
+  init() {
     this.subscriber.subscribeComponents(this.objectComponents);
     this.objectComponents.forEach((component) => {
       component.init();
