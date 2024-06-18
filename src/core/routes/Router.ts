@@ -1,6 +1,8 @@
 import DashboardPage from '@src/pages/DashboardPage';
 import ExcelPage from '@src/pages/ExcelPage';
 import $, { Dom } from '../dom/dom';
+import ActiveRoute from './ActiveRoute';
+import Page from './Page';
 
 interface IRoutesParams {
   dashboard: new (...arg: any[]) => DashboardPage;
@@ -13,6 +15,10 @@ interface IRouter {
    * Добавление слушателя события на изменения hash
    */
   init(): void;
+
+  /**
+   * Метод рендеринга страницы (компонента)
+   */
   changePageHandler(): void;
   /**
    * Метод при размонтировании
@@ -26,6 +32,8 @@ class Router implements IRouter {
 
   private routes: IRoutesParams;
 
+  private page: null | Page;
+
   constructor(selector: string, routes: IRoutesParams) {
     if (!selector) {
       throw new Error('Selector is not provided in Router');
@@ -33,6 +41,7 @@ class Router implements IRouter {
 
     this.$placeholder = $(selector);
     this.routes = routes;
+    this.page = null;
 
     this.changePageHandler = this.changePageHandler.bind(this);
 
@@ -45,11 +54,15 @@ class Router implements IRouter {
   }
 
   changePageHandler() {
-    const Page = this.routes.excel;
+    this.$placeholder.clear();
+    if (this.page) {
+      this.page.destroy();
+    }
+    const PageClass = ActiveRoute.path.includes('excel') ? this.routes.excel : this.routes.dashboard;
 
-    const page = new Page();
-    this.$placeholder.append(page.getRoot());
-    page.afterRender();
+    this.page = new PageClass(ActiveRoute.param);
+    this.$placeholder.append(this.page.getRoot());
+    this.page.afterRender();
   }
 
   destroy() {
