@@ -239,9 +239,7 @@ export class Dom implements IDom {
   attr(name: string, value: string): this;
   attr(name: string): string | undefined | null;
   attr(name: string, value?: string): string | this | undefined | null {
-    console.log('value', value);
-    if (value) {
-      console.log('name', name);
+    if (typeof value === 'string') {
       this.$el?.setAttribute(name, value);
       return this;
     }
