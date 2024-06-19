@@ -11,6 +11,7 @@ export const defaultState: IRootState = {
   currentText: '',
   currentStyles: initialToolbarState,
   title: DEFAULT_TITLE,
+  dateTable: new Date().toJSON(),
 };
 
 const localStorageState = localStorageFn<IRootState>(EXCEL_STATE);

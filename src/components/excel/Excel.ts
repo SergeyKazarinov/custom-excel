@@ -3,6 +3,7 @@ import { IExcelComponent } from '@src/core/excelComponent/ExcelComponent';
 import Observer from '@src/core/observer/Observer';
 import StoreSubscriber from '@src/core/storeSubscriber/StoreSubscriber';
 import { TActions } from '@src/store/action.types';
+import { updateDate } from '@src/store/actions';
 import { IReturnCreateStore, IRootState } from '@src/store/store.types';
 
 interface IExcelOptions<T> {
@@ -49,6 +50,7 @@ class Excel<T extends IExcelComponent> {
   }
 
   init() {
+    this.store.dispatch(updateDate());
     this.subscriber.subscribeComponents(this.objectComponents);
     this.objectComponents.forEach((component) => {
       component.init();

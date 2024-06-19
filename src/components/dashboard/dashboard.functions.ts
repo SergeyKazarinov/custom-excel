@@ -12,7 +12,9 @@ export const toHTML = (key: string) => {
   return /* html */ `
   <li class="dashboard__record">
       <a href="#excel/${id}" class="dashboard__link"> ${model.title} </a>
-      <strong class="dashboard__create-date">12.06.2023</strong>
+      <strong class="dashboard__create-date">
+        ${new Date(model.dateTable).toLocaleDateString()} ${new Date(model.dateTable).toLocaleTimeString()}
+      </strong>
   </li>
   `;
 };

@@ -18,4 +18,5 @@ export interface IRootState {
   currentText: string;
   currentStyles: IToolbarState;
   title: string;
+  dateTable: string;
 }
