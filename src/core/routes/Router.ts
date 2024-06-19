@@ -59,7 +59,6 @@ class Router implements IRouter {
       this.page.destroy();
     }
     const PageClass = ActiveRoute.path.includes('excel') ? this.routes.excel : this.routes.dashboard;
-
     this.page = new PageClass(ActiveRoute.param);
     this.$placeholder.append(this.page.getRoot());
     this.page.afterRender();

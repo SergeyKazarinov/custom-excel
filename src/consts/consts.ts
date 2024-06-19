@@ -7,4 +7,4 @@ export const initialToolbarState: IToolbarState = {
   fontStyle: 'normal',
 };
 
-export const defaultTitle = 'Новая таблица';
+export const DEFAULT_TITLE = 'Новая таблица';

@@ -7,9 +7,9 @@ interface IPage {
 }
 
 class Page implements IPage {
-  private params: any;
+  protected params: string | undefined;
 
-  constructor(params?: any) {
+  constructor(params?: string) {
     this.params = params;
   }
 

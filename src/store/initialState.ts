@@ -1,4 +1,4 @@
-import { initialToolbarState } from '@src/consts/consts';
+import { DEFAULT_TITLE, initialToolbarState } from '@src/consts/consts';
 import { EXCEL_STATE } from '@src/consts/localStorage';
 import localStorageFn from '@src/helpers/localStorage';
 import { IRootState } from './store.types';
@@ -10,11 +10,17 @@ export const defaultState: IRootState = {
   stylesState: {},
   currentText: '',
   currentStyles: initialToolbarState,
-  title: 'Новая таблица',
+  title: DEFAULT_TITLE,
 };
 
 const localStorageState = localStorageFn<IRootState>(EXCEL_STATE);
 
-export const initialState = localStorageState || defaultState;
+export const initialState = localStorageState || structuredClone(defaultState);
 
-export default initialState;
+const normalize = <S>(state: S) => ({
+  ...state,
+  currentStyle: initialToolbarState,
+  currentText: '',
+});
+
+export const normalizeInitialState = <S>(state?: S) => (state ? normalize<S>(state) : structuredClone(defaultState));

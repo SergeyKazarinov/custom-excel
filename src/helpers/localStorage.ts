@@ -7,7 +7,7 @@
 const localStorageFn = <R>(key: string, data?: unknown) => {
   if (!data) {
     const localStorageData = localStorage.getItem(key);
-    return localStorageData && (JSON.parse(localStorageData) as R);
+    return localStorageData ? (JSON.parse(localStorageData) as R) : undefined;
   }
 
   localStorage.setItem(key, JSON.stringify(data));

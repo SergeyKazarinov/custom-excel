@@ -1,4 +1,4 @@
-import { defaultTitle } from '@src/consts/consts';
+import { DEFAULT_TITLE } from '@src/consts/consts';
 import $, { Dom } from '@src/core/dom/dom';
 import ExcelComponent from '@src/core/excelComponent/ExcelComponent';
 import debounce from '@src/helpers/debounce';
@@ -24,7 +24,7 @@ class Header extends ExcelComponent implements IHeader {
   }
 
   toHTML(): string {
-    const { title = defaultTitle } = this.store.getState();
+    const { title = DEFAULT_TITLE } = this.store.getState();
     return `
     <header class="excel__header header">
       <input type="text" class="header__input" value="${title}" spellcheck/>
