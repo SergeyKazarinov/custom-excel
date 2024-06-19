@@ -1,9 +1,21 @@
-export const toHTML = () => /* html */ `
+import localStorageFn from '@src/helpers/localStorage';
+import { IRootState } from '@src/store/store.types';
+
+export const toHTML = (key: string) => {
+  const model = localStorageFn<IRootState>(key);
+  const id = key.split(':')[1];
+
+  if (!model) {
+    return '';
+  }
+
+  return /* html */ `
   <li class="dashboard__record">
-      <a href="#" class="dashboard__link"> Таблица №1 </a>
+      <a href="#excel/${id}" class="dashboard__link"> ${model.title} </a>
       <strong class="dashboard__create-date">12.06.2023</strong>
   </li>
   `;
+};
 
 export const getAllKeys = () => {
   const keys = [];

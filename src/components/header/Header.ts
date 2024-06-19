@@ -1,10 +1,11 @@
 import { DEFAULT_TITLE } from '@src/consts/consts';
 import $, { Dom } from '@src/core/dom/dom';
 import ExcelComponent from '@src/core/excelComponent/ExcelComponent';
+import ActiveRoute from '@src/core/routes/ActiveRoute';
 import debounce from '@src/helpers/debounce';
 import { changeTitle } from '@src/store/actions';
 import { IComponentOptions } from '@src/types/components';
-import { IInputEvent } from '@src/types/general';
+import { IButtonEvent, IInputEvent } from '@src/types/general';
 
 interface IHeader {}
 
@@ -14,7 +15,7 @@ class Header extends ExcelComponent implements IHeader {
   constructor($root: Dom, options: IComponentOptions) {
     super($root, {
       name: 'Header',
-      listeners: ['input'],
+      listeners: ['input', 'click'],
       ...options,
     });
   }
@@ -30,11 +31,11 @@ class Header extends ExcelComponent implements IHeader {
       <input type="text" class="header__input" value="${title}" spellcheck/>
 
       <div>
-        <button class="header__button">
-          <span class="material-icons"> delete </span>
+        <button class="header__button" data-button="remove" >
+          <span class="material-icons" data-button="remove"> delete </span>
         </button>
-        <button class="header__button">
-          <span class="material-icons"> logout </span>
+        <button class="header__button" data-button="exit">
+          <span class="material-icons" data-button="exit"> logout </span>
         </button>
       </div>
     </header>
@@ -44,6 +45,24 @@ class Header extends ExcelComponent implements IHeader {
   onInput(event: IInputEvent) {
     const $target = $(event.target);
     this.$dispatch(changeTitle($target.text()));
+  }
+
+  onClick(event: IButtonEvent) {
+    const $target = $(event.target);
+
+    if ($target.data?.button === 'remove') {
+      // eslint-disable-next-line
+      const decision = confirm('Вы действительно хотите удалить таблицу?');
+
+      if (decision) {
+        localStorage.removeItem(`excel:${ActiveRoute.param}`);
+        ActiveRoute.navigate('');
+      }
+    }
+
+    if ($target.data?.button === 'exit') {
+      ActiveRoute.navigate('');
+    }
   }
 }
 

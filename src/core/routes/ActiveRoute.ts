@@ -20,6 +20,10 @@ class ActiveRoute {
   static get param() {
     return ActiveRoute.path.split('/')[1];
   }
+
+  static navigate(path: string) {
+    window.location.hash = path;
+  }
 }
 
 export default ActiveRoute;
