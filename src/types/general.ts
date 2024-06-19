@@ -4,6 +4,10 @@ export interface IDivClickEvent extends MouseEvent {
   target: HTMLDivElement;
 }
 
-export interface IInputEvent extends InputEvent {
+export interface IInputEvent extends MouseEvent {
   target: HTMLInputElement;
+}
+
+export interface IButtonEvent extends MouseEvent {
+  target: HTMLButtonElement;
 }

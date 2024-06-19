@@ -6,6 +6,7 @@ import {
   IChangeTitle,
   ICurrentStyles,
   ITableResizeActionCreator,
+  IUpdateDate,
 } from './action.types';
 
 export const tableResizeActionCreator = (data: ITableResize): ITableResizeActionCreator => ({
@@ -31,4 +32,8 @@ export const applyStyles = (data: IApplyStylePayload): IApplyStyle => ({
 export const changeTitle = (data: string): IChangeTitle => ({
   type: 'CHANGE_TITLE',
   payload: data,
+});
+
+export const updateDate = (): IUpdateDate => ({
+  type: 'UPDATE_DATE',
 });

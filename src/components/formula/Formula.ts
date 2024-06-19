@@ -35,7 +35,6 @@ class Formula extends ExcelComponent implements IFormula {
     this.$subscribe('table:select', ($cell: Dom) => {
       const id = $cell.getId<false>();
       const dataValue = $cell.attr('data-value');
-      console.log('dataValue', dataValue);
       if (id) {
         this.$dispatch(actions.changeTextActionCreator({ text: $cell.text(), id }));
       }

@@ -47,6 +47,9 @@ const rootReducer = (state: IRootState, action: TActions): IRootState => {
     case 'CHANGE_TITLE':
       return { ...state, title: action.payload };
 
+    case 'UPDATE_DATE':
+      return { ...state, dateTable: new Date().toJSON() };
+
     default:
       return state;
   }

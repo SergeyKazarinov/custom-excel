@@ -23,12 +23,17 @@ export interface IChangeTitle {
   payload: string;
 }
 
+export interface IUpdateDate {
+  readonly type: 'UPDATE_DATE';
+}
+
 export type TTableActions =
   | ITableResizeActionCreator
   | IChangeTextActionCreator
   | IApplyStyle
   | ICurrentStyles
   | IChangeTitle
+  | IUpdateDate
   | { type: '__INIT__'; payload: any };
 
 export type TActions = TTableActions;
