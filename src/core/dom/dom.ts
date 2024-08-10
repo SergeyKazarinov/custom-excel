@@ -9,24 +9,146 @@ export interface IParsedId {
 type ReturnType<T extends boolean> = T extends true ? IParsedId : string;
 
 export interface IDom {
+  /**
+   * Метод добавления HTML разметки в dom дерево
+   * @param {string} html - HTML разметка
+   * @returns DOM
+   */
   html(html: string | undefined): this | string | undefined;
+
+  /**
+   * Метод добавления строки в содержимое тега
+   * @param {string} text строка, которая будет добавляться в элемент
+   * @returns {Dom} - DOM-элемент
+   */
   text(text: string): Dom;
+
+  /**
+   * Метод добавления строки в содержимое тега
+   *
+   * @param {Dom} text
+   * @returns {string}
+   */
   text(text: Dom): string;
+
+  /**
+   * Возвращает содержимое Dom-элемента
+   *
+   * @returns {string}
+   */
   text(): string;
+
+  /**
+   * Метод очистки HTML
+   * @returns {this}
+   */
   clear(): this;
+
+  /**
+   * Метод добавления Dom-элемента в Dom-дерево
+   *
+   * @param {(Element | Dom)} node
+   * @returns {this}
+   */
   append(node: Element | Dom): this;
+
+  /**
+   * Метод добавления слушателя событий
+   * @param {string} evenType  - тип слушателя
+   * @param {(...arg: any[]) => void} callback  - колбэк-функция, которая будет срабатывать
+   */
   on(evenType: string, callback: (...arg: any[]) => void): void;
+
+  /**
+   * Метод удаления слушателя событий
+   * @param {string} eventType - тип слушателя
+   * @param {(...arg: any[]) => void} callback - колбэк-функция, которая будет удаляться
+   */
   off(evenType: string, callback: (...arg: any[]) => void): void;
+
+  /**
+   * Метод получения dom элемента по селектору
+   * @param {string} selector - селектор дом элемента, по которому осуществляется поиск
+   * @returns {(Dom | null | undefined)} возвращает dom элемент
+   */
   closest(selector: string): Dom | null | undefined;
+
+  /**
+   * Метод получения информации элемента: размеры и положение
+   * @returns {(DOMRect | undefined)} - объект с данными
+   */
   getCoords(): DOMRect | undefined;
+
+  /**
+   * Метод получения data-id ячейки
+   *
+   * @template {boolean} T - Generic, определяющий в каком виде вернуть данные
+   * @param {T} parse - флаг, определяющий в каком формате вернуть данные: объект или строка
+   * @returns {(ReturnType<T> | undefined)} Объект типа {ros, col} или строку типа 'row:col`
+   */
+  getId<T extends boolean>(parse: T): ReturnType<T> | undefined;
+
+  /**
+   * Метод получения dom элемента по селектору
+   *
+   * @param {string} selector
+   * @returns {(Dom | undefined)} dom элементов
+   */
   find(selector: string): Dom | undefined;
+
+  /**
+   * Метод получения dom всех дом элементов по селектору
+   *
+   * @param {string} selector
+   * @returns {(NodeListOf<Element> | undefined)} псевдомассив dom элементов
+   */
   findAll(selector: string): NodeListOf<Element> | undefined;
+
+  /**
+   * Метод фокусировки на элементе
+   *
+   * @returns {this}
+   */
   focus(): this;
+
+  /**
+   * Метод установки инлайновых стилей на элемент
+   *
+   * @param {Partial<Record<keyof CSSStyleDeclaration, string>>} styles - объект типа {css свойство: значение}
+   */
   css(styles: Partial<Record<keyof CSSStyleDeclaration, string>>): void;
+
+  /**
+   * Метод добавления css класса
+   *
+   * @param {string} className - название класса
+   * @returns {this}
+   */
   addClass(className: string): this;
+
+  /**
+   * Метод удаления css класса
+   *
+   * @param {string} className - название класса
+   * @returns {this}
+   */
   removeClass(className: string): this;
-  getId<T extends boolean>(parsed?: T): ReturnType<T> | undefined;
+
+  /**
+   * Метод установки значения атрибута
+   *
+   * @param {string} name - название атрибута
+   * @param {string} value - значение атрибута
+   * @returns {this}
+   */
   attr(name: string, value: string): this;
+
+  /**
+   * Метод получения значения атрибута
+   *
+   * @param {string} name - название атрибута
+   * @returns {(string | undefined | null)}
+   */
   attr(name: string): string | undefined | null;
 }
 
@@ -48,11 +170,6 @@ export class Dom implements IDom {
     return null;
   }
 
-  /**
-   * Метод добавления HTML разметки в dom дерево
-   * @param {string} html - HTML разметка
-   * @returns DOM
-   */
   html(html: string | undefined) {
     if (typeof html === 'string') {
       if (this.$el) {
@@ -63,11 +180,6 @@ export class Dom implements IDom {
     return this.$el?.outerHTML.trim();
   }
 
-  // TODO Доработать документацию (включить перегрузку)
-  /**
-   * Метод добавления строки в содержимое тега
-   * @param {string} text строка, которая будет добавляться в элемент
-   */
   text(text: string): Dom;
   text(text: Dom): string;
   text(): string;
@@ -83,29 +195,15 @@ export class Dom implements IDom {
     return this.$el?.textContent?.trim();
   }
 
-  /**
-   * Метод очистки HTML
-   * @returns DOM
-   */
   clear() {
     this.html('');
     return this;
   }
 
-  /**
-   * Метод добавления слушателя событий
-   * @param {string} eventType - тип слушателя
-   * @param callback - колбэк-функция, которая будет срабатывать
-   */
   on(eventType: string, callback: (...arg: any[]) => void) {
     this.$el?.addEventListener(eventType, callback);
   }
 
-  /**
-   * Метод удаления слушателя событий
-   * @param {string} eventType - тип слушателя
-   * @param callback - колбэк-функция, которая будет удаляться
-   */
   off(eventType: string, callback: (...arg: any[]) => void) {
     this.$el?.removeEventListener(eventType, callback);
   }
@@ -126,11 +224,6 @@ export class Dom implements IDom {
     return this;
   }
 
-  /**
-   * Метод получения dom элемента по селектору
-   * @param {string} selector - селектор дом элемента, по которому осуществляется поиск
-   * @returns {Element | null | undefined} возвращает dom элемент
-   */
   closest(selector: string) {
     const nodeElement = this.$el?.closest(selector);
 
@@ -142,19 +235,10 @@ export class Dom implements IDom {
     return null;
   }
 
-  /**
-   * Метод получения информации элемента: размеры и положение
-   * @returns - объект с данными
-   */
   getCoords() {
     return this.$el?.getBoundingClientRect();
   }
 
-  /**
-   * Метод получения data-id ячейки
-   * @param {boolean} parse - флаг, определяющий в каком формате вернуть данные: объект или строка
-   * @returns Объект типа {ros, col} или строку типа 'row:col`
-   */
   getId<T extends boolean>(parse?: T): ReturnType<T> | undefined {
     if (parse) {
       const parsed = this.getId(false)?.split(':');
@@ -168,11 +252,6 @@ export class Dom implements IDom {
     return this.data?.id as ReturnType<T>;
   }
 
-  /**
-   * Метод получения dom элемента по селектору
-   * @param {string} selector
-   * @returns {NodeListOf<Element>} dom элементов
-   */
   find(selector: string) {
     const element = this.$el?.querySelector(selector);
 
@@ -184,11 +263,6 @@ export class Dom implements IDom {
     return undefined;
   }
 
-  /**
-   * Метод получения dom всех дом элементов по селектору
-   * @param {string} selector
-   * @returns {NodeListOf<Element>} псевдомассив dom элементов
-   */
   findAll(selector: string) {
     return this.$el?.querySelectorAll(selector);
   }
@@ -198,10 +272,6 @@ export class Dom implements IDom {
     return this;
   }
 
-  /**
-   * Метод установки инлайновых стилей на элемент
-   * @param {object} styles - объект типа {css свойство: значение}
-   */
   css(styles: TCSSStyles) {
     Object.entries(styles).forEach(([key, value]) => {
       if (this.$el instanceof HTMLElement) {
@@ -218,19 +288,11 @@ export class Dom implements IDom {
     }, {});
   }
 
-  /**
-   * Метод добавления css класса
-   * @param {string} className - название класса
-   */
   addClass(className: string) {
     this.$el?.classList.add(className);
     return this;
   }
 
-  /**
-   * Метод удаления css класса
-   * @param {string} className - название класса
-   */
   removeClass(className: string) {
     this.$el?.classList.remove(className);
     return this;
