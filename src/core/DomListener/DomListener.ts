@@ -1,36 +1,8 @@
 import { Dom } from '@core/dom/dom';
 import getNameWithPrefix from '@src/helpers/getNameWithPrefix';
 import { TListeners } from '@src/types/listeners';
-import { IOptions } from '../excelComponent/ExcelComponent';
-
-export interface IDomListener {
-  /**
-   * Корневой Dom-элумент
-   *
-   * @type {Dom}
-   */
-  $root: Dom;
-
-  /**
-   * Массив типов слушателей событий
-   *
-   * @type {TListeners[]}
-   */
-  listeners: TListeners[];
-
-  /**
-   * Название компонента
-   *
-   * @type {string}
-   */
-  name: string;
-
-  /** Добавление слушателей событий */
-  initDomListeners(): void;
-
-  /** Удаление слушателей событий */
-  removeDomListeners(): void;
-}
+import { IOptions } from '../excelComponent/ExcelComponent.types';
+import { IDomListener } from './DomListener.types';
 
 class DomListener implements IDomListener {
   public $root: Dom;

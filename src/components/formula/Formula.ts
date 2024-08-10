@@ -22,7 +22,7 @@ class Formula extends ExcelComponent implements IFormula {
     super($root, {
       name: 'Formula',
       listeners: ['input', 'keydown'],
-      subscribe: ['currentText'],
+      subscribes: ['currentText'],
       ...options,
     });
 

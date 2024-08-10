@@ -1,5 +1,5 @@
 import $ from '@core/dom/dom';
-import { IExcelComponent } from '@src/core/excelComponent/ExcelComponent';
+import { IExcelComponent } from '@src/core/excelComponent/ExcelComponent.types';
 import Observer from '@src/core/observer/Observer';
 import StoreSubscriber from '@src/core/storeSubscriber/StoreSubscriber';
 import { TActions } from '@src/store/action.types';
