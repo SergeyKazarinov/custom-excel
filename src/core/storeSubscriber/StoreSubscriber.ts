@@ -2,12 +2,8 @@ import isEqual from '@src/helpers/isEqual';
 import { TActions } from '@src/store/action.types';
 import { IReturnCreateStore, IRootState } from '@src/store/store.types';
 import { TChanges } from '@src/types/components';
-import { IExcelComponent } from '../excelComponent/ExcelComponent';
-
-interface IStoreSubscriber {
-  subscribeComponents<T extends IExcelComponent>(components: T[]): void;
-  unsubscribeFromStore(): void;
-}
+import { IExcelComponent } from '../excelComponent/ExcelComponent.types';
+import { IStoreSubscriber } from './StoreSubscriber.types';
 
 class StoreSubscriber implements IStoreSubscriber {
   private store: IReturnCreateStore<IRootState, TActions>;
