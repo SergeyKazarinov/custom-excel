@@ -1,6 +1,12 @@
 import localStorageFn from '@src/helpers/localStorage';
 import { IRootState } from '@src/store/store.types';
 
+/**
+ * Рендер элемента списка таблиц
+ *
+ * @param {string} key - ключ таблицы excel
+ * @returns {string} - html-строку списка таблиц
+ */
 export const toHTML = (key: string) => {
   const model = localStorageFn<IRootState>(key);
   const id = key.split(':')[1];
@@ -19,6 +25,11 @@ export const toHTML = (key: string) => {
   `;
 };
 
+/**
+ * Получение всех ключей таблиц Excel
+ *
+ * @returns {[]} - массив ключей или пустой массив, если таблиц нет в памяти
+ */
 export const getAllKeys = () => {
   const keys = [];
   for (let i = 0; i < localStorage.length; i++) {
@@ -30,6 +41,11 @@ export const getAllKeys = () => {
   return keys;
 };
 
+/**
+ * Создание таблицы списка таблиц excel
+ *
+ * @returns {string} - html-строку: таблица
+ */
 export const createTable = () => {
   const keys = getAllKeys();
 
