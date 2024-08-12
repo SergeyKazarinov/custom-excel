@@ -5,13 +5,9 @@ import StoreSubscriber from '@src/core/storeSubscriber/StoreSubscriber';
 import { TActions } from '@src/store/action.types';
 import { updateDate } from '@src/store/actions';
 import { IReturnCreateStore, IRootState } from '@src/store/store.types';
+import { IExcel, IExcelOptions } from './Excel.types';
 
-interface IExcelOptions<T> {
-  components: (new (...arg: any[]) => T)[];
-  store: IReturnCreateStore<IRootState, TActions>;
-}
-
-class Excel<T extends IExcelComponent> {
+class Excel<T extends IExcelComponent> implements IExcel {
   public components: (new (...arg: any[]) => T)[];
 
   public objectComponents: T[];

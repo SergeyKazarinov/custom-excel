@@ -315,6 +315,13 @@ export class Dom implements IDom {
 
 const $ = (selector: string | HTMLElement) => new Dom(selector);
 
+/**
+ * Создание dom-элемента
+ *
+ * @param tagName - тип html-тэга
+ * @param classes - список классов, которые необходимо добавить создаваемому dom-элементу
+ * @returns dom-элемент
+ */
 $.create = (tagName: string, classes: string = '') => {
   const el = document.createElement(tagName);
 
