@@ -6,8 +6,7 @@ import debounce from '@src/helpers/debounce';
 import { changeTitle } from '@src/store/actions';
 import { IComponentOptions } from '@src/types/components';
 import { IButtonEvent, IInputEvent } from '@src/types/general';
-
-interface IHeader {}
+import { IHeader } from './Header.types';
 
 class Header extends ExcelComponent implements IHeader {
   static className: string = 'header';
