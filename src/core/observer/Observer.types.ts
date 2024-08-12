@@ -3,7 +3,7 @@ import { TTriggers } from '@src/types/observers';
 
 export interface IObserver {
   /**
-   * Уведомляем слушатель, если он есть
+   * Выполнение слушателя события, если он есть
    *
    * @param {TTriggers} eventName
    * @param {...any[]} args
