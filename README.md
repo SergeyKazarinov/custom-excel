@@ -1,5 +1,7 @@
 # Custom Excel
 
+<img src='./public/assets/Custom-Excel.gif' width="100%">
+
 Проект представляет собой аналог Google-Excel таблицы.
 
 - Проект написан на Vanilla JS: самописный фреймворк с роутингом страниц и компонентами.
