@@ -25,6 +25,12 @@ const getWidth = (colState: Record<string, number>, index: number) => `${colStat
  */
 const getHeight = (rowState: Record<string, number>, index: number) => `${rowState[index] || DEFAULT_HEIGHT}px`;
 
+/**
+ * Обновляет объект колонки, задает ширину столбца
+ *
+ * @param {IRootState} state - глобальный store
+ * @returns {(colName: string, index: number) => ICreateCol} - Название ячейки, индекс и значение ширины столбца
+ */
 const withWidthFrom =
   (state: IRootState) =>
   (colName: string, index: number): ICreateCol => ({
@@ -100,6 +106,14 @@ const createRow = ({
   `;
 };
 
+/**
+ * Создание таблицы (Dom-элумента)
+ *
+ * @param {ICreateTable} param0
+ * @param {ICreateTable} [param0.rowsCount=100] - Число столбцов, которые будут отрендерены
+ * @param {ICreateTable} param0.state - глобальный store
+ * @returns {string} - html-элемент таблицы
+ */
 const createTable = ({ rowsCount = 100, state }: ICreateTable) => {
   const colsCount = CHART_CODES.Z - CHART_CODES.A + 1;
   const rows = [];

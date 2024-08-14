@@ -1,12 +1,6 @@
 import { Dom } from '@src/core/dom/dom';
 import { TCSSStyles } from '@src/types/general';
-
-interface ITableSelection {
-  clear(): void;
-  select($el: Dom): void;
-  selectGroup($group: Dom[]): void;
-  applyStyle(style: TCSSStyles): void;
-}
+import { ITableSelection } from './TableSelection.types';
 
 class TableSelection implements ITableSelection {
   static selectedClassName = 'table__cell_selected';

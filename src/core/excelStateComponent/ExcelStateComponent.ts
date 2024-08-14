@@ -1,8 +1,7 @@
 import ExcelComponent from '../excelComponent/ExcelComponent';
+import { IExcelStateComponent, State } from './ExcelStateComponent.types';
 
-type State = { [key: string]: any };
-
-class ExcelStateComponent<S extends State> extends ExcelComponent {
+class ExcelStateComponent<S extends State> extends ExcelComponent implements IExcelStateComponent<S> {
   protected state: S;
   // eslint-disable-next-line
   constructor(...args: any[]) {

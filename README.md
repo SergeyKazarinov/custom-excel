@@ -1,11 +1,20 @@
-# Custom Excel (Проект находится на этапе разработки)
+# Custom Excel
+
+Проект представляет собой аналог Google-Excel таблицы.
+
+- Проект написан на Vanilla JS: самописный фреймворк с роутингом страниц и компонентами.
+- В проекте используется самописный аналог [Redux](/src/store/createStore.ts) и аналог [JQuery](/src/core/dom/).
+- Все методы и функции задокументированы при помощи [TSDoc](https://tsdoc.org/).
+- Для хранения данных используется localStorage.
+
+Ссылка на проект: https://sergeykazarinov.github.io/custom-excel/
 
 ## Содержание
 
 - [Этапы разработки](/docs/developments.md)
 - [Быстрый старт](#start)
 - [Скрипты](#scripts)
-- [Стэк](#stack)
+- [Stack](#stack)
 
 ## <a id="start" ></a>Быстрый старт
 
@@ -32,9 +41,11 @@ npm run start
 - `npm run dev` - Запуск проекта на webpack dev server
 - `npm run build:dev` - Сборка проекта в dev-режиме
 - `npm run build:prod` - Сборка проекта в prod-режиме
+- `npm run deploy` - Деплой проекта на GH-Pages
 
 ## <a id="stack" ></a>Stack
 
 - Node v.20
 - Vanilla JS
 - TS
+- TSDoc

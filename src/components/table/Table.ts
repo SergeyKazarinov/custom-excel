@@ -1,26 +1,19 @@
 import { KEYBOARDS } from '@src/consts/codes';
+import { initialToolbarState } from '@src/consts/consts';
 import $, { Dom } from '@src/core/dom/dom';
 import ExcelComponent from '@src/core/excelComponent/ExcelComponent';
-import { IComponentOptions } from '@src/types/components';
-import * as actions from '@src/store/actions';
-import { IToolbarState } from '@src/types/state';
-import { initialToolbarState } from '@src/consts/consts';
-import { IInputEvent } from '@src/types/general';
 import parseString from '@src/helpers/parseString';
+import * as actions from '@src/store/actions';
+import { IComponentOptions } from '@src/types/components';
+import { IInputEvent } from '@src/types/general';
+import { IToolbarState } from '@src/types/state';
 import handleMatrix from './helpers/handleMatrix';
 import handleResize from './helpers/handleResize';
 import isCell from './helpers/isCell';
 import nextSelector from './helpers/nextSelector';
 import createTable from './table.template';
 import TableSelection from './TableSelection';
-
-export interface ITable {
-  onMousedown: (event: MouseEvent) => void;
-  onKeydown: (event: KeyboardEvent) => void;
-  onInput(event: IInputEvent): void;
-  selectCell($cell: Dom): void;
-  resizeTable(event: MouseEvent): Promise<void>;
-}
+import { ITable } from './table.types';
 
 class Table extends ExcelComponent implements ITable {
   static className = 'excel__table table';

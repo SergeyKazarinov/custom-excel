@@ -1,3 +1,9 @@
+/**
+ * Парсит строку и выполняет JS код, если строка является формулой в Excel
+ *
+ * @param {string} [value=''] - строка, заполненная в ячейке
+ * @returns {string} - результат вычисления или введенная строка
+ */
 const parseString = (value: string = ''): string => {
   if (value.startsWith('=')) {
     try {

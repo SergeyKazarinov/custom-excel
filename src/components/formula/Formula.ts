@@ -4,14 +4,7 @@ import { IComponentOptions } from '@src/types/components';
 import * as actions from '@src/store/actions';
 import { IRootState } from '@src/store/store.types';
 import { IDivClickEvent } from '@src/types/general';
-
-export interface IFormula {
-  init(): void;
-  toHTML(): string;
-  onInput(event: IDivClickEvent): void;
-  onKeydown(event: KeyboardEvent): void;
-  changeStore(changes: Partial<IRootState>): void;
-}
+import { IFormula } from './Formula.types';
 
 class Formula extends ExcelComponent implements IFormula {
   static className = 'excel__formula formula';
@@ -22,7 +15,7 @@ class Formula extends ExcelComponent implements IFormula {
     super($root, {
       name: 'Formula',
       listeners: ['input', 'keydown'],
-      subscribe: ['currentText'],
+      subscribes: ['currentText'],
       ...options,
     });
 

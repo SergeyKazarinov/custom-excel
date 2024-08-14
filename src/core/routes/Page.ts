@@ -1,10 +1,5 @@
 import { Dom } from '../dom/dom';
-
-interface IPage {
-  getRoot(): Dom;
-  afterRender(): void;
-  destroy(): void;
-}
+import { IPage } from './Page.type';
 
 class Page implements IPage {
   protected params: string | undefined;
@@ -13,11 +8,6 @@ class Page implements IPage {
     this.params = params;
   }
 
-  /**
-   * Метод выбрасывает ошибку, если не реализован в классах наследников
-   *
-   * @returns {Element}
-   */
   getRoot(): Dom {
     throw new Error('error page');
   }

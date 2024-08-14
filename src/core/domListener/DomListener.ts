@@ -1,21 +1,8 @@
 import { Dom } from '@core/dom/dom';
-import capitalize from '@src/helpers/capitalize';
-import { TListeners, TMethods } from '@src/types/listeners';
-import { IOptions } from '../excelComponent/ExcelComponent';
-
-/**
- * Переводит полученную строку в camelCase формат с префиксом 'on'
- * @param eventName - название слушателя
- * @returns - строку с префиксом on в формате camelCase
- */
-const getNameWithPrefix = (eventName: TListeners): TMethods => `on${capitalize(eventName)}`;
-export interface IDomListener {
-  $root: Dom;
-  listeners: TListeners[];
-  name: string;
-  initDomListeners(): void;
-  removeDomListeners(): void;
-}
+import getNameWithPrefix from '@src/helpers/getNameWithPrefix';
+import { TListeners } from '@src/types/listeners';
+import { IOptions } from '../excelComponent/ExcelComponent.types';
+import { IDomListener } from './DomListener.types';
 
 class DomListener implements IDomListener {
   public $root: Dom;

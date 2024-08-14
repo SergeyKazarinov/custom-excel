@@ -6,6 +6,12 @@ interface IButton {
   style: IToolbarState;
 }
 
+/**
+ * Создание HTML-элемента кнопки toolbar
+ *
+ * @param {IButton} button - option кнопки
+ * @returns {string} - HTML-элемент кнопки
+ */
 const createButton = (button: IButton) => /* html */ `
 <button
   class="toolbar__button ${button.isActive ? 'active' : ''}"
@@ -19,6 +25,12 @@ const createButton = (button: IButton) => /* html */ `
   > ${button.icon} </span>
 </button>`;
 
+/**
+ * Создание HTML-элемента toolbar
+ *
+ * @param {IToolbarState} state - стили кнопок тулбара
+ * @returns {string} - HTML-элемент
+ */
 const createToolbar = (state: IToolbarState) => {
   const toolbarButtons: IButton[] = [
     {
@@ -67,7 +79,7 @@ const createToolbar = (state: IToolbarState) => {
 
   return /* html */ `
   <div class="excel__toolbar toolbar">
-    ${toolbarButtons.map((button) => createButton(button))}
+    ${toolbarButtons.map(createButton)}
   </div>
 `;
 };

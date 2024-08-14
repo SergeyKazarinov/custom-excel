@@ -1,31 +1,7 @@
-import DashboardPage from '@src/pages/DashboardPage';
-import ExcelPage from '@src/pages/ExcelPage';
 import $, { Dom } from '../dom/dom';
 import ActiveRoute from './ActiveRoute';
 import Page from './Page';
-
-interface IRoutesParams {
-  dashboard: new (...arg: any[]) => DashboardPage;
-  excel: new (...arg: any[]) => ExcelPage;
-}
-
-interface IRouter {
-  /**
-   * Инициализация роутинга
-   * Добавление слушателя события на изменения hash
-   */
-  init(): void;
-
-  /**
-   * Метод рендеринга страницы (компонента)
-   */
-  changePageHandler(): void;
-  /**
-   * Метод при размонтировании
-   * Удаляет слушатели событий
-   */
-  destroy(): void;
-}
+import { IRouter, IRoutesParams } from './Router.types';
 
 class Router implements IRouter {
   private $placeholder: Dom;
