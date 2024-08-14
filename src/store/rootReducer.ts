@@ -26,7 +26,6 @@ const rootReducer = (state: IRootState, action: TActions): IRootState => {
         ...state,
         currentText: action.payload.text,
         // @ts-ignore
-
         dataState: getValue(state, field, action.payload, action.payload.text),
       };
 
