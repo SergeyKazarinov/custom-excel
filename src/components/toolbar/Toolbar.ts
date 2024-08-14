@@ -5,8 +5,7 @@ import { IToolbarState } from '@src/types/state';
 import { initialToolbarState } from '@src/consts/consts';
 import { IRootState } from '@src/store/store.types';
 import createToolbar from './toolbar.template';
-
-export interface IToolbar {}
+import { IToolbar } from './Toolbar.types';
 
 class Toolbar extends ExcelStateComponent<IToolbarState> implements IToolbar {
   static className = 'excel__toolbar toolbar';
