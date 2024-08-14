@@ -28,6 +28,12 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */ });
 /* harmony import */ var _src_helpers_localStorage__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! @src/helpers/localStorage */ "./helpers/localStorage.ts");
 
+/**
+ * Рендер элемента списка таблиц
+ *
+ * @param {string} key - ключ таблицы excel
+ * @returns {string} - html-строку списка таблиц
+ */
 var toHTML = function (key) {
     var model = (0,_src_helpers_localStorage__WEBPACK_IMPORTED_MODULE_0__["default"])(key);
     var id = key.split(':')[1];
@@ -36,6 +42,11 @@ var toHTML = function (key) {
     }
     return /* html */ "\n  <li class=\"dashboard__record\">\n      <a href=\"#excel/".concat(id, "\" class=\"dashboard__link\"> ").concat(model.title, " </a>\n      <strong class=\"dashboard__create-date\">\n        ").concat(new Date(model.dateTable).toLocaleDateString(), " ").concat(new Date(model.dateTable).toLocaleTimeString(), "\n      </strong>\n  </li>\n  ");
 };
+/**
+ * Получение всех ключей таблиц Excel
+ *
+ * @returns {[]} - массив ключей или пустой массив, если таблиц нет в памяти
+ */
 var getAllKeys = function () {
     var keys = [];
     for (var i = 0; i < localStorage.length; i++) {
@@ -46,6 +57,11 @@ var getAllKeys = function () {
     }
     return keys;
 };
+/**
+ * Создание таблицы списка таблиц excel
+ *
+ * @returns {string} - html-строку: таблица
+ */
 var createTable = function () {
     var keys = getAllKeys();
     if (!keys.length) {
@@ -161,7 +177,7 @@ var __assign = (undefined && undefined.__assign) || function () {
 var Formula = /** @class */ (function (_super) {
     __extends(Formula, _super);
     function Formula($root, options) {
-        var _this = _super.call(this, $root, __assign({ name: 'Formula', listeners: ['input', 'keydown'], subscribe: ['currentText'] }, options)) || this;
+        var _this = _super.call(this, $root, __assign({ name: 'Formula', listeners: ['input', 'keydown'], subscribes: ['currentText'] }, options)) || this;
         _this.$formula = undefined;
         return _this;
     }
@@ -304,11 +320,11 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
 /* harmony export */ });
 /* harmony import */ var _src_consts_codes__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! @src/consts/codes */ "./consts/codes.ts");
-/* harmony import */ var _src_core_dom_dom__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! @src/core/dom/dom */ "./core/dom/dom.ts");
-/* harmony import */ var _src_core_excelComponent_ExcelComponent__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! @src/core/excelComponent/ExcelComponent */ "./core/excelComponent/ExcelComponent.ts");
-/* harmony import */ var _src_store_actions__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! @src/store/actions */ "./store/actions.ts");
-/* harmony import */ var _src_consts_consts__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! @src/consts/consts */ "./consts/consts.ts");
-/* harmony import */ var _src_helpers_parseString__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! @src/helpers/parseString */ "./helpers/parseString.ts");
+/* harmony import */ var _src_consts_consts__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! @src/consts/consts */ "./consts/consts.ts");
+/* harmony import */ var _src_core_dom_dom__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! @src/core/dom/dom */ "./core/dom/dom.ts");
+/* harmony import */ var _src_core_excelComponent_ExcelComponent__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! @src/core/excelComponent/ExcelComponent */ "./core/excelComponent/ExcelComponent.ts");
+/* harmony import */ var _src_helpers_parseString__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! @src/helpers/parseString */ "./helpers/parseString.ts");
+/* harmony import */ var _src_store_actions__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! @src/store/actions */ "./store/actions.ts");
 /* harmony import */ var _helpers_handleMatrix__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ./helpers/handleMatrix */ "./components/table/helpers/handleMatrix.ts");
 /* harmony import */ var _helpers_handleResize__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! ./helpers/handleResize */ "./components/table/helpers/handleResize.ts");
 /* harmony import */ var _helpers_isCell__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! ./helpers/isCell */ "./components/table/helpers/isCell.ts");
@@ -403,8 +419,8 @@ var Table = /** @class */ (function (_super) {
     Table.prototype.selectCell = function ($cell) {
         this.selection.select($cell);
         this.$trigger('table:select', $cell);
-        var styles = $cell.getStyles(Object.keys(_src_consts_consts__WEBPACK_IMPORTED_MODULE_4__.initialToolbarState));
-        this.$dispatch(_src_store_actions__WEBPACK_IMPORTED_MODULE_3__.getCurrentStyles(styles));
+        var styles = $cell.getStyles(Object.keys(_src_consts_consts__WEBPACK_IMPORTED_MODULE_1__.initialToolbarState));
+        this.$dispatch(_src_store_actions__WEBPACK_IMPORTED_MODULE_5__.getCurrentStyles(styles));
     };
     Table.prototype.resizeTable = function (event) {
         return __awaiter(this, void 0, void 0, function () {
@@ -416,7 +432,7 @@ var Table = /** @class */ (function (_super) {
                         return [4 /*yield*/, (0,_helpers_handleResize__WEBPACK_IMPORTED_MODULE_7__["default"])(event, this.$root)];
                     case 1:
                         data = _a.sent();
-                        this.$dispatch(_src_store_actions__WEBPACK_IMPORTED_MODULE_3__.tableResizeActionCreator(data));
+                        this.$dispatch(_src_store_actions__WEBPACK_IMPORTED_MODULE_5__.tableResizeActionCreator(data));
                         return [3 /*break*/, 3];
                     case 2:
                         e_1 = _a.sent();
@@ -436,7 +452,7 @@ var Table = /** @class */ (function (_super) {
         }
         this.$subscribe('formula:input', function (value) {
             var _a;
-            (_a = _this.selection.currentCell) === null || _a === void 0 ? void 0 : _a.attr('data-value', value).text((0,_src_helpers_parseString__WEBPACK_IMPORTED_MODULE_5__["default"])(value));
+            (_a = _this.selection.currentCell) === null || _a === void 0 ? void 0 : _a.attr('data-value', value).text((0,_src_helpers_parseString__WEBPACK_IMPORTED_MODULE_4__["default"])(value));
             _this.updateCurrentTextInStore(value);
         });
         this.$subscribe('formula:done', function () {
@@ -445,7 +461,7 @@ var Table = /** @class */ (function (_super) {
         });
         this.$subscribe('toolbar:applyStyle', function (style) {
             _this.selection.applyStyle(style);
-            _this.$dispatch(_src_store_actions__WEBPACK_IMPORTED_MODULE_3__.applyStyles({
+            _this.$dispatch(_src_store_actions__WEBPACK_IMPORTED_MODULE_5__.applyStyles({
                 ids: _this.selection.selectedIds,
                 value: style,
             }));
@@ -455,7 +471,7 @@ var Table = /** @class */ (function (_super) {
         var _this = this;
         this.resizeTable(event);
         if ((0,_helpers_isCell__WEBPACK_IMPORTED_MODULE_8__["default"])(event) && event.target instanceof HTMLElement) {
-            var $target = (0,_src_core_dom_dom__WEBPACK_IMPORTED_MODULE_1__["default"])(event.target);
+            var $target = (0,_src_core_dom_dom__WEBPACK_IMPORTED_MODULE_2__["default"])(event.target);
             if (event.shiftKey) {
                 var $cells = (0,_helpers_handleMatrix__WEBPACK_IMPORTED_MODULE_6__["default"])($target, this.selection.currentCell)
                     .map(function (id) { return _this.$root.find("[data-id=\"".concat(id, "\"]")); })
@@ -486,18 +502,18 @@ var Table = /** @class */ (function (_super) {
         var _a;
         var id = (_a = this.selection.currentCell) === null || _a === void 0 ? void 0 : _a.getId();
         if (id) {
-            this.$dispatch(_src_store_actions__WEBPACK_IMPORTED_MODULE_3__.changeTextActionCreator({
+            this.$dispatch(_src_store_actions__WEBPACK_IMPORTED_MODULE_5__.changeTextActionCreator({
                 id: id,
                 text: text,
             }));
         }
     };
     Table.prototype.onInput = function (event) {
-        this.updateCurrentTextInStore((0,_src_core_dom_dom__WEBPACK_IMPORTED_MODULE_1__["default"])(event.target).text());
+        this.updateCurrentTextInStore((0,_src_core_dom_dom__WEBPACK_IMPORTED_MODULE_2__["default"])(event.target).text());
     };
     Table.className = 'excel__table table';
     return Table;
-}(_src_core_excelComponent_ExcelComponent__WEBPACK_IMPORTED_MODULE_2__["default"]));
+}(_src_core_excelComponent_ExcelComponent__WEBPACK_IMPORTED_MODULE_3__["default"]));
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (Table);
 
 
@@ -830,6 +846,12 @@ var getWidth = function (colState, index) { return "".concat(colState[index] || 
  * @returns {string} высоту строки
  */
 var getHeight = function (rowState, index) { return "".concat(rowState[index] || _src_consts_table__WEBPACK_IMPORTED_MODULE_1__.DEFAULT_HEIGHT, "px"); };
+/**
+ * Обновляет объект колонки, задает ширину столбца
+ *
+ * @param {IRootState} state - глобальный store
+ * @returns {(colName: string, index: number) => ICreateCol} - Название ячейки, индекс и значение ширины столбца
+ */
 var withWidthFrom = function (state) {
     return function (colName, index) { return ({
         colName: colName,
@@ -873,6 +895,14 @@ var createRow = function (_a) {
     var height = rowState ? getHeight(rowState, Number(rowName)) : "".concat(_src_consts_table__WEBPACK_IMPORTED_MODULE_1__.DEFAULT_HEIGHT, "px");
     return /* html */ "\n    <div class=\"table__row\" ".concat(rowName && "data-type=\"resizable\"", " data-row=").concat(rowName, " style=\"height: ").concat(height, "\">\n      <div class=\"table__row_info\">").concat(rowName, "\n        ").concat(resize, "\n      </div>\n      <div class=\"table__row_data\">\n        ").concat(children, "\n      </div>\n    </div>\n  ");
 };
+/**
+ * Создание таблицы (Dom-элумента)
+ *
+ * @param {ICreateTable} param0
+ * @param {ICreateTable} [param0.rowsCount=100] - Число столбцов, которые будут отрендерены
+ * @param {ICreateTable} param0.state - глобальный store
+ * @returns {string} - html-элемент таблицы
+ */
 var createTable = function (_a) {
     var _b = _a.rowsCount, rowsCount = _b === void 0 ? 100 : _b, state = _a.state;
     var colsCount = _src_consts_codes__WEBPACK_IMPORTED_MODULE_0__.CHART_CODES.Z - _src_consts_codes__WEBPACK_IMPORTED_MODULE_0__.CHART_CODES.A + 1;
@@ -983,7 +1013,19 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
 /* harmony export */ });
+/**
+ * Создание HTML-элемента кнопки toolbar
+ *
+ * @param {IButton} button - option кнопки
+ * @returns {string} - HTML-элемент кнопки
+ */
 var createButton = function (button) { /* html */ return "\n<button\n  class=\"toolbar__button ".concat(button.isActive ? 'active' : '', "\"\n  data-type=\"button\"\n  data-style='").concat(JSON.stringify(button.style), "'\n  >\n  <span\n    class=\"material-icons\"\n    data-type=\"button\"\n    data-style='").concat(JSON.stringify(button.style), "'\n  > ").concat(button.icon, " </span>\n</button>"); };
+/**
+ * Создание HTML-элемента toolbar
+ *
+ * @param {IToolbarState} state - стили кнопок тулбара
+ * @returns {string} - HTML-элемент
+ */
 var createToolbar = function (state) {
     var toolbarButtons = [
         {
@@ -1029,7 +1071,7 @@ var createToolbar = function (state) {
             },
         },
     ];
-    return /* html */ "\n  <div class=\"excel__toolbar toolbar\">\n    ".concat(toolbarButtons.map(function (button) { return createButton(button); }), "\n  </div>\n");
+    return /* html */ "\n  <div class=\"excel__toolbar toolbar\">\n    ".concat(toolbarButtons.map(createButton), "\n  </div>\n");
 };
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (createToolbar);
 
@@ -1129,14 +1171,8 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
 /* harmony export */ });
-/* harmony import */ var _src_helpers_capitalize__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! @src/helpers/capitalize */ "./helpers/capitalize.ts");
+/* harmony import */ var _src_helpers_getNameWithPrefix__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! @src/helpers/getNameWithPrefix */ "./helpers/getNameWithPrefix.ts");
 
-/**
- * Переводит полученную строку в camelCase формат с префиксом 'on'
- * @param eventName - название слушателя
- * @returns - строку с префиксом on в формате camelCase
- */
-var getNameWithPrefix = function (eventName) { return "on".concat((0,_src_helpers_capitalize__WEBPACK_IMPORTED_MODULE_0__["default"])(eventName)); };
 var DomListener = /** @class */ (function () {
     function DomListener($root, options) {
         if (!$root) {
@@ -1150,7 +1186,7 @@ var DomListener = /** @class */ (function () {
         var _this = this;
         this.listeners.forEach(function (listener) {
             var _a;
-            var method = getNameWithPrefix(listener);
+            var method = (0,_src_helpers_getNameWithPrefix__WEBPACK_IMPORTED_MODULE_0__["default"])(listener);
             // @ts-ignore
             if (!_this[method]) {
                 var name_1 = _this.name || '';
@@ -1165,7 +1201,7 @@ var DomListener = /** @class */ (function () {
     DomListener.prototype.removeDomListeners = function () {
         var _this = this;
         this.listeners.forEach(function (listener) {
-            var method = getNameWithPrefix(listener);
+            var method = (0,_src_helpers_getNameWithPrefix__WEBPACK_IMPORTED_MODULE_0__["default"])(listener);
             // @ts-ignore
             if (!_this[method]) {
                 var name_2 = _this.name || '';
@@ -1210,11 +1246,6 @@ var Dom = /** @class */ (function () {
         enumerable: false,
         configurable: true
     });
-    /**
-     * Метод добавления HTML разметки в dom дерево
-     * @param {string} html - HTML разметка
-     * @returns DOM
-     */
     Dom.prototype.html = function (html) {
         var _a;
         if (typeof html === 'string') {
@@ -1237,28 +1268,14 @@ var Dom = /** @class */ (function () {
         }
         return (_c = (_b = this.$el) === null || _b === void 0 ? void 0 : _b.textContent) === null || _c === void 0 ? void 0 : _c.trim();
     };
-    /**
-     * Метод очистки HTML
-     * @returns DOM
-     */
     Dom.prototype.clear = function () {
         this.html('');
         return this;
     };
-    /**
-     * Метод добавления слушателя событий
-     * @param {string} eventType - тип слушателя
-     * @param callback - колбэк-функция, которая будет срабатывать
-     */
     Dom.prototype.on = function (eventType, callback) {
         var _a;
         (_a = this.$el) === null || _a === void 0 ? void 0 : _a.addEventListener(eventType, callback);
     };
-    /**
-     * Метод удаления слушателя событий
-     * @param {string} eventType - тип слушателя
-     * @param callback - колбэк-функция, которая будет удаляться
-     */
     Dom.prototype.off = function (eventType, callback) {
         var _a;
         (_a = this.$el) === null || _a === void 0 ? void 0 : _a.removeEventListener(eventType, callback);
@@ -1277,11 +1294,6 @@ var Dom = /** @class */ (function () {
         }
         return this;
     };
-    /**
-     * Метод получения dom элемента по селектору
-     * @param {string} selector - селектор дом элемента, по которому осуществляется поиск
-     * @returns {Element | null | undefined} возвращает dom элемент
-     */
     Dom.prototype.closest = function (selector) {
         var _a;
         var nodeElement = (_a = this.$el) === null || _a === void 0 ? void 0 : _a.closest(selector);
@@ -1291,19 +1303,10 @@ var Dom = /** @class */ (function () {
         }
         return null;
     };
-    /**
-     * Метод получения информации элемента: размеры и положение
-     * @returns - объект с данными
-     */
     Dom.prototype.getCoords = function () {
         var _a;
         return (_a = this.$el) === null || _a === void 0 ? void 0 : _a.getBoundingClientRect();
     };
-    /**
-     * Метод получения data-id ячейки
-     * @param {boolean} parse - флаг, определяющий в каком формате вернуть данные: объект или строка
-     * @returns Объект типа {ros, col} или строку типа 'row:col`
-     */
     Dom.prototype.getId = function (parse) {
         var _a, _b;
         if (parse) {
@@ -1317,11 +1320,6 @@ var Dom = /** @class */ (function () {
         }
         return (_b = this.data) === null || _b === void 0 ? void 0 : _b.id;
     };
-    /**
-     * Метод получения dom элемента по селектору
-     * @param {string} selector
-     * @returns {NodeListOf<Element>} dom элементов
-     */
     Dom.prototype.find = function (selector) {
         var _a;
         var element = (_a = this.$el) === null || _a === void 0 ? void 0 : _a.querySelector(selector);
@@ -1331,11 +1329,6 @@ var Dom = /** @class */ (function () {
         }
         return undefined;
     };
-    /**
-     * Метод получения dom всех дом элементов по селектору
-     * @param {string} selector
-     * @returns {NodeListOf<Element>} псевдомассив dom элементов
-     */
     Dom.prototype.findAll = function (selector) {
         var _a;
         return (_a = this.$el) === null || _a === void 0 ? void 0 : _a.querySelectorAll(selector);
@@ -1346,10 +1339,6 @@ var Dom = /** @class */ (function () {
             (_a = this.$el) === null || _a === void 0 ? void 0 : _a.focus();
         return this;
     };
-    /**
-     * Метод установки инлайновых стилей на элемент
-     * @param {object} styles - объект типа {css свойство: значение}
-     */
     Dom.prototype.css = function (styles) {
         var _this = this;
         Object.entries(styles).forEach(function (_a) {
@@ -1368,19 +1357,11 @@ var Dom = /** @class */ (function () {
             return acc;
         }, {});
     };
-    /**
-     * Метод добавления css класса
-     * @param {string} className - название класса
-     */
     Dom.prototype.addClass = function (className) {
         var _a;
         (_a = this.$el) === null || _a === void 0 ? void 0 : _a.classList.add(className);
         return this;
     };
-    /**
-     * Метод удаления css класса
-     * @param {string} className - название класса
-     */
     Dom.prototype.removeClass = function (className) {
         var _a;
         (_a = this.$el) === null || _a === void 0 ? void 0 : _a.classList.remove(className);
@@ -1402,6 +1383,13 @@ var Dom = /** @class */ (function () {
 }());
 
 var $ = function (selector) { return new Dom(selector); };
+/**
+ * Создание dom-элемента
+ *
+ * @param tagName - тип html-тэга
+ * @param classes - список классов, которые необходимо добавить создаваемому dom-элементу
+ * @returns dom-элемент
+ */
 $.create = function (tagName, classes) {
     if (classes === void 0) { classes = ''; }
     var el = document.createElement(tagName);
@@ -1459,7 +1447,7 @@ var ExcelComponent = /** @class */ (function (_super) {
         var _a, _b;
         var _this = _super.call(this, $root, options) || this;
         _this.observer = (_a = options.observer) !== null && _a !== void 0 ? _a : null;
-        _this.subscribe = options.subscribe || [];
+        _this.subscribes = options.subscribes || [];
         _this.store = options.store;
         _this.name = (_b = options.name) !== null && _b !== void 0 ? _b : '';
         _this.unsubscribers = [];
@@ -1467,13 +1455,13 @@ var ExcelComponent = /** @class */ (function (_super) {
         return _this;
         // this.storeSub = null;
     }
-    /* Метод для настройки компонента до инициализации */
     ExcelComponent.prototype.prepare = function () { };
-    /** Возвращает шаблон компонента */
     ExcelComponent.prototype.toHTML = function () {
         return '';
     };
-    /** Метод уведомления слушателя про событие */
+    ExcelComponent.prototype.init = function () {
+        this.initDomListeners();
+    };
     ExcelComponent.prototype.$trigger = function (event) {
         var _a;
         var args = [];
@@ -1482,33 +1470,20 @@ var ExcelComponent = /** @class */ (function (_super) {
         }
         (_a = this.observer) === null || _a === void 0 ? void 0 : _a.trigger.apply(_a, __spreadArray([event], args, false));
     };
-    /** Метод подписания на событие event */
     ExcelComponent.prototype.$subscribe = function (event, fn) {
         var _a;
         var unsub = (_a = this.observer) === null || _a === void 0 ? void 0 : _a.subscribe(event, fn);
         if (unsub)
             this.unsubscribers.push(unsub);
     };
-    /** Метод для взаимодействия со store */
     ExcelComponent.prototype.$dispatch = function (action) {
         this.store.dispatch(action);
     };
-    /**
-     * Метод для использования в дочерних классах.
-     * В этот метод поступают изменения только по тем полям, на которые подписаны компоненты
-     *
-     * @param {Partial<IRootState>} changes - объект с измененными полями
-     */
     // eslint-disable-next-line
     ExcelComponent.prototype.changeStore = function (changes) { };
     ExcelComponent.prototype.isWatching = function (key) {
-        return this.subscribe.includes(key);
+        return this.subscribes.includes(key);
     };
-    /** Инициализация компонента */
-    ExcelComponent.prototype.init = function () {
-        this.initDomListeners();
-    };
-    /** Удаление компонента и чистка слушателей */
     ExcelComponent.prototype.destroy = function () {
         this.removeDomListeners();
         this.unsubscribers.forEach(function (unsub) { return unsub(); });
@@ -1607,11 +1582,6 @@ var Observer = /** @class */ (function () {
     function Observer() {
         this.listeners = {};
     }
-    /**
-     * Уведомляем слушатель, если он есть
-     * @param eventName
-     * @param args
-     */
     Observer.prototype.trigger = function (eventName) {
         var args = [];
         for (var _i = 1; _i < arguments.length; _i++) {
@@ -1621,11 +1591,6 @@ var Observer = /** @class */ (function () {
             listener.apply(void 0, args);
         });
     };
-    /**
-     * Подписываемся на уведомление. Метод добавления нового слушателя
-     * @param event
-     * @param fn
-     */
     Observer.prototype.subscribe = function (event, fn) {
         var _this = this;
         this.listeners[event] = this.listeners[event] || [];
@@ -1682,6 +1647,12 @@ var ActiveRoute = /** @class */ (function () {
         enumerable: false,
         configurable: true
     });
+    /**
+     * Перенаправляет на заданный адрес
+     *
+     * @static
+     * @param {string} path - необходимый адрес
+     */
     ActiveRoute.navigate = function (path) {
         window.location.hash = path;
     };
@@ -1706,11 +1677,6 @@ var Page = /** @class */ (function () {
     function Page(params) {
         this.params = params;
     }
-    /**
-     * Метод выбрасывает ошибку, если не реализован в классах наследников
-     *
-     * @returns {Element}
-     */
     Page.prototype.getRoot = function () {
         throw new Error('error page');
     };
@@ -1832,8 +1798,9 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */ });
 /**
  * Возвращает строку, но первая буква будет заглавная
- * @param string - Строка, которую необходимо изменить
- * @returns - ту же строку, но с большой буквы
+ *
+ * @param {TListeners} string - Строка, которую необходимо изменить
+ * @returns {TUpperListeners} - ту же строку, но с большой буквы
  */
 var capitalize = function (string) {
     var upperString = (string.charAt(0).toUpperCase() + string.slice(1));
@@ -1854,6 +1821,14 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
 /* harmony export */ });
+/**
+ * Выполнить код с задержкой
+ *
+ * @template {any[]} TArgs - тип аргументов, передаваемые в колбэк-функцию
+ * @param {(...args: TArgs) => void} fn - колбэк-функция, которую необходимо выполнить
+ * @param {number} wait - время задержки
+ * @returns {void, wait: number) => (...args: TArgs) => void} - коблбэк-функция
+ */
 var debounce = function (fn, wait) {
     var timeout;
     return function () {
@@ -1874,6 +1849,30 @@ var debounce = function (fn, wait) {
 
 /***/ }),
 
+/***/ "./helpers/getNameWithPrefix.ts":
+/*!**************************************!*\
+  !*** ./helpers/getNameWithPrefix.ts ***!
+  \**************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
+/* harmony export */ });
+/* harmony import */ var _capitalize__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./capitalize */ "./helpers/capitalize.ts");
+
+/**
+ * Переводит полученную строку в camelCase формат с префиксом 'on'
+ *
+ * @param {TListeners} eventName - название слушателя
+ * @returns {TMethods} - строку с префиксом on в формате camelCase
+ */
+var getNameWithPrefix = function (eventName) { return "on".concat((0,_capitalize__WEBPACK_IMPORTED_MODULE_0__["default"])(eventName)); };
+/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (getNameWithPrefix);
+
+
+/***/ }),
+
 /***/ "./helpers/isEqual.ts":
 /*!****************************!*\
   !*** ./helpers/isEqual.ts ***!
@@ -1884,6 +1883,13 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
 /* harmony export */ });
+/**
+ * Метод сравнения предыдущего состояния и текущего store
+ *
+ * @param {*} prevState - предыдущее состояние
+ * @param {*} state - текущее состояние
+ * @returns {boolean}
+ */
 var isEqual = function (prevState, state) {
     if (typeof prevState === 'object' && typeof state === 'object') {
         return JSON.stringify(prevState) === JSON.stringify(state);
@@ -1906,7 +1912,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
 /* harmony export */ });
 /**
- * Функция получения данных из localStorage или установки данных
+ * Функция получения данных из localStorage или сохранения данных
  * @param {string}key - ключ, по которому устанавливается значение либо получает
  * @param {unknown} data - данные, которые необходимо поместить в localStorage
  * @returns данные из localStorage
@@ -1933,6 +1939,12 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
 /* harmony export */ });
+/**
+ * Парсит строку и выполняет JS код, если строка является формулой в Excel
+ *
+ * @param {string} [value=''] - строка, заполненная в ячейке
+ * @returns {string} - результат вычисления или введенная строка
+ */
 var parseString = function (value) {
     if (value === void 0) { value = ''; }
     if (value.startsWith('=')) {
@@ -1986,6 +1998,13 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
 /* harmony export */ });
 var camelToDashCase = function (str) { return str.replace(/([A-Z])/g, function (g) { return "-".concat(g[0].toLowerCase()); }); };
+/**
+ * Установка инлайновых стилей
+ *
+ * @template {TCSSStyles} T
+ * @param {T} styles - свойство CSS
+ * @returns {*}
+ */
 var toInlineStyles = function (styles) {
     return Object.keys(styles)
         .map(function (key) { return "".concat(camelToDashCase(key), ": ").concat(styles[key]); })
